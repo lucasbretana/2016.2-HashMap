@@ -1,19 +1,30 @@
 TARGET = VoltaQuerida
 #
 CC = gcc
-C_FLAGS = -Wall
+CC_FLAG = -std=c11 -Wall $(DEBUG)
+RM = rm
+RM_FLAG = -rf
 # Basic directories
 LIB = lib
 SRC = src
 BIN = bin
 
-OBJECT = $(LIB)/*.o
+# Objects
+OBJ = main hashmap usefull
 
-all: $(LIB).o
-	$(CC) $(C_FLAGS) $(OBJECT) -o $(TARGET).out
+#===================================================================
+all: $(addsuffix .o, $(OBJ) )
+	$(CC) $(CC_FLAG) $(addprefix $(BIN)/, $(addsuffix .o, $(OBJ) ) ) -o $(TARGET).out
 
-$(LIB).o: main.o
-	@echo "Done in libs.o"
+main.o: $(SRC)/main.c
+	$(CC) $(CC_FLAG) -c $(SRC)/main.c -o $(BIN)/main.o
 
-main.o: $(SRC)/main.c 
-	$(CC) $(C_FLAGS) -c $(SRC)/main.c -o $(LIB)/main.o
+hashmap.o: $(SRC)/hashmap.c $(SRC)/hashmap.h
+	$(CC) $(CC_FLAG) -c $(SRC)/hashmap.c -o $(BIN)/hashmap.o
+
+usefull.o: $(SRC)/usefull.c $(SRC)/usefull.h
+	$(CC) $(CC_FLAG) -c $(SRC)/usefull.c -o $(BIN)/usefull.o
+
+clean: 
+	$(RM) $(RM_FLAG) $(BIN)/*.o 
+	$(RM) $(RM_FLAG) $(TARGET).out

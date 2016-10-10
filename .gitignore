@@ -34,3 +34,6 @@
 
 # Vim files
 .*.swp
+
+# Test files
+test.c

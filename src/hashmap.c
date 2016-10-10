@@ -1,11 +1,8 @@
 #include <stdlib.h>
+#include "usefull.h"
 #include "hashmap.h"
 
 unsigned int SIZE = TAM_INI;
-
-int length(key *k){
-  return 0;
-}
 
 // Reference: http://eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx
 pos h(void *k, int len){

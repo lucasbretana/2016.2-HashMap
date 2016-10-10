@@ -1,3 +1,14 @@
+// Erro code
+#define SUCCESS 0
+#define INVALID_PARAMETER 1
+
+// Colision method
+#define CHAINING "-encadeamento"
+#define LINEAR "-linear"
+#define QUADRATIC "-quadratica"
+#define DOUBLE_HASH "-hash_duplo"
+
+//
 #define TAM_INI 500
 #define ALPHA 0.75
 
