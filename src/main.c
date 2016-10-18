@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "usefull.h"
 #include "hashmap.h"
-
+#define HELP "--help"
 void printHelp(char *);
 
 int main(int argc, char **argv) {
@@ -10,16 +10,21 @@ int main(int argc, char **argv) {
     return INVALID_PARAMETER;
   }
 
-  if(strcomp(argv[1], "--help") == 0){
+  if(strcomp(argv[1], HELP) == 0){
     printHelp(argv[0]);
     return SUCCESS;
+  }
+  char op[7], in[100];
+  while(scanf("%s %s", op, in) == 2){
+    printf("%s", in);
+    printf("%u\n\n", h1(in));
   }
 
  return SUCCESS;
 }
 
 void printHelp(char *target){
-  printf("Usage: %s [OPTION] < [ENTRY_FILE]\n", target);
+  printf("Usage: %s [OPTION] < [ENTRY_FILE]\n\n", target);
   printf("Simulate the use of a Hash Map using the speficied method for treating colisin.\n");
   printf("  %s\t\tuse the chaining method.\n", CHAINING);
   printf("  %s\t\tuse the linear method.\n", LINEAR);
@@ -29,4 +34,3 @@ void printHelp(char *target){
   printf("Examples: \n  %s %s < hash_keys.txt\n", target, DOUBLE_HASH);
   printf("  %s %s < keys.txt\n", target, LINEAR);
 }
-
