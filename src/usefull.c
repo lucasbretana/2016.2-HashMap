@@ -4,10 +4,9 @@ int length(char *k){
   int len = 0;
   while(k[len] != '\0')
     len ++;
-  
+
   return len;
 }
-
 
 int strcomp(char *s1, char *s2){
   if((s1 == NULL) && (s2 == NULL)) return 0;

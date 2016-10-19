@@ -37,6 +37,7 @@
 
 # Test files
 test.c
-
+*.java
+*.class
 # Fucking crap files
 .fuse*

@@ -3,4 +3,4 @@
 #define INVALID_PARAMETER 1
 
 int length(char *);
-int strcomp(char *, char *);
+int strcomp(char *, const char *);

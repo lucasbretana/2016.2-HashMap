@@ -8,9 +8,10 @@
 #define TAM_INI 500
 #define ALPHA 0.75
 
-typedef unsigned int code;
+typedef long long int code;
+// int64_t code;
 typedef char key;
 
-code h(void *, int);
+code h0(void *, int);
 code h1(key *);
 code h2(key *);
