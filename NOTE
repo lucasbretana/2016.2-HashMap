@@ -1,0 +1,12 @@
+Know types
+  key: is a valid key to hashed,
+    -> char
+
+  h_code: is a hash code
+    -> long long int
+
+  position: is a valid hash map position, cannot be negative neither bigger than the SIZE of the hash map
+    -> unsigned int
+
+Know bugs
+  the hash function (h0) is NOT generating the right hash codes

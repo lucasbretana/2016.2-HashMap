@@ -3,8 +3,7 @@
 int length(char *k){
   int len = 0;
   while(k[len] != '\0')
-    len ++;
-
+      len ++;
   return len;
 }
 
@@ -24,4 +23,18 @@ int strcomp(char *s1, char *s2){
     i++;
   }
   return l1;
+}
+
+long long int powlld(long long int base, int e){
+  long long int res = 1L;
+  // piece of cake
+  // if(base % 2 == 0){
+  //   if(base == 2)
+  //     return base << e;
+  //   return ;
+  // }
+  for(int i=0 ; i<e ; i++){
+    res = res * base;
+  }
+  return base;
 }

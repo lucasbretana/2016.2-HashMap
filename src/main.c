@@ -17,9 +17,7 @@ int main(int argc, char **argv) {
   char op[7], in[100];
   while(scanf("%s %s", op, in) == 2){
     printf("%s", in);
-    printf("H: %lld\n\n", h0(in, length(in)));
-    // printf("H1: %u\n\n", h(in, length(in)));
-    // printf("H2: %u\n\n", h(in, length(in)));
+    printf(" %lld\n", h0(in, length(in)));
   }
 
  return SUCCESS;

@@ -14,7 +14,7 @@ OBJ = main hashmap usefull
 
 #===================================================================
 all: $(addsuffix .o, $(OBJ) )
-	$(CC) $(CC_FLAG) $(addprefix $(BIN)/, $(addsuffix .o, $(OBJ) ) ) -o $(TARGET).out
+	$(CC) $(CC_FLAG) $(addprefix $(BIN)/, $(addsuffix .o, $(OBJ) ) ) -o $(TARGET).out -lm
 
 main.o: $(SRC)/main.c
 	$(CC) $(CC_FLAG) -c $(SRC)/main.c -o $(BIN)/main.o
@@ -25,6 +25,6 @@ hashmap.o: $(SRC)/hashmap.c $(SRC)/hashmap.h
 usefull.o: $(SRC)/usefull.c $(SRC)/usefull.h
 	$(CC) $(CC_FLAG) -c $(SRC)/usefull.c -o $(BIN)/usefull.o
 
-clean: 
-	$(RM) $(RM_FLAG) $(BIN)/*.o 
+clean:
+	$(RM) $(RM_FLAG) $(BIN)/*.o
 	$(RM) $(RM_FLAG) $(TARGET).out
