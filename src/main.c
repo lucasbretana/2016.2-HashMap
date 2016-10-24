@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
     return INVALID_PARAMETER;
   }
 
-  if(strcomp(argv[1], HELP) == 0){
+  if(strcomp(argv[1], (char*) HELP) == 0){
     printHelp(argv[0]);
     return SUCCESS;
   }

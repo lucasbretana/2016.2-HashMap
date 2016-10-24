@@ -8,10 +8,10 @@
 #define TAM_INI 500
 #define ALPHA 0.75
 
-typedef long long int h_code;
-typedef unsigned int position;
+typedef long long int h_code_t;
+typedef unsigned int position_t;
 typedef char key;
 
-h_code h0(void *, int);
-position h1(key *);
-position h2(key *);
+h_code_t h0(void *, int);
+position_t h1(key *);
+position_t h2(key *);

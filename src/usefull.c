@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "usefull.h"
 
 int length(char *k){
   int len = 0;
@@ -25,16 +26,23 @@ int strcomp(char *s1, char *s2){
   return l1;
 }
 
-long long int powlld(long long int base, int e){
-  long long int res = 1L;
-  // piece of cake
-  // if(base % 2 == 0){
-  //   if(base == 2)
-  //     return base << e;
-  //   return ;
-  // }
-  for(int i=0 ; i<e ; i++){
-    res = res * base;
-  }
-  return base;
+h_code_t absh(h_code_t hash){
+  if(hash < 0)
+    return hash * -1;
+  else
+    return hash;
 }
+
+// h_code_t powlld(long long int base, int e){
+//   long long int res = 1L;
+//   // piece of cake
+//   // if(base % 2 == 0){
+//   //   if(base == 2)
+//   //     return base << e;
+//   //   return ;
+//   // }
+//   for(int i=0 ; i<e ; i++){
+//     res = res * base;
+//   }
+//   return base;
+// }
