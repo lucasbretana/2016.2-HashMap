@@ -15,7 +15,7 @@ unsigned int SIZE = TAM_INI;
 h_code_t h0(void *k, int len){
   char *p = (char *) k;
   h_code_t hash = 2166136261L;
-  for(int i=0; i<len; i++){
+  for(int i=1; i<len-1; i++){
     hash = (hash * 16777619) ^ (p[i]); // Multiply by prime number found to work well
     // hash = hash ^ (p[i]); // xor next byte into the bottom of the hash
   }

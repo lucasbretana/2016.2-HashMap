@@ -1,5 +1,0 @@
-INSERT "ahjmyuwwkrxnfmqg" 4612529082139301743 243 243 0 SUCCESS
-INSERT "ebeoapezsdzspmqcxjtgdyxkrpvmwmmpmpylwrkvmeozgboqayhufojcmxghpteqrgfnzdjsjggw" 8782329002806559110 110 110 0 SUCCESS
-INSERT "htnskcwajiwsnlzxif" 1194199989929696647 147 147 0 SUCCESS
-INSERT "loprezetukwwhtwxiverrcitacuefyjktxafwaxbdxlixxdwxhjctsalrmgbcuspziiavkadexabdiwxh" 906376253887196356 356 356 0 SUCCESS
-INSERT "jbhgyzdccbexypedctcmvzumetfsaiegjuepkgoxxauidbyflwycilhptaoobmpldegyrt" 4502444067134918514 14 14 0 SUCCESS
