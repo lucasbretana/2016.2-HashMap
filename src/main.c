@@ -1,8 +1,10 @@
 #include <stdio.h>
+#include <string.h>
 #include "usefull.h"
 #include "hashmap.h"
-#define HELP "--help"
+
 void printHelp(char *);
+short int METHOD = 0;
 
 int main(int argc, char **argv) {
   if(argc != 2){
@@ -10,14 +12,31 @@ int main(int argc, char **argv) {
     return INVALID_PARAMETER;
   }
 
-  if(strcomp(argv[1], (char*) HELP) == 0){
+  if(strcomp(argv[1], HELP) == 0){
     printHelp(argv[0]);
     return SUCCESS;
   }
+  else if(strcomp(argv[1], CHAINING) == 0)
+    METHOD = 1;
+  else if(strcomp(argv[1], LINEAR) == 0)
+    METHOD = 2;
+  else if(strcomp(argv[1], QUADRATIC) == 0)
+    METHOD = 3;
+  else if(strcomp(argv[1], DOUBLE_HASH) == 0)
+    METHOD = 4;
+  else{
+    fprintf(stderr, "Must specify a valid colision method!");
+    printHelp(argv[0]);
+    return INVALID_PARAMETER;
+  }
+
   char op[7], in[100];
+  h_code_t code = 0L;
+  position_t pos = 0;
   while(scanf("%s %s", op, in) == 2){
-    printf("%s", in);
-    printf(" %lld\n", h0(in, length(in)));
+    scanf("%s %s", op, in);
+    code = h0(in, length(in));
+    pos = position(code);
   }
 
  return SUCCESS;

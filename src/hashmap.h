@@ -1,4 +1,5 @@
 // Colision method
+#define HELP "--help"
 #define CHAINING "-encadeamento"
 #define LINEAR "-linear"
 #define QUADRATIC "-quadratica"
