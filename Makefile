@@ -1,4 +1,4 @@
-TARGET = VoltaQuerida
+TARGET = DilMae
 #
 CC = gcc
 CC_FLAG = -std=c11 -Wall $(DEBUG)
@@ -19,7 +19,7 @@ all: $(addsuffix .o, $(OBJ) )
 main.o: $(SRC)/main.c
 	$(CC) $(CC_FLAG) -c $(SRC)/main.c -o $(BIN)/main.o
 
-hashmap.o: $(SRC)/hashmap.c $(SRC)/hashmap.h
+hashmap.o: $(SRC)/hashmap.c $(SRC)/hashmap.h 
 	$(CC) $(CC_FLAG) -c $(SRC)/hashmap.c -o $(BIN)/hashmap.o
 
 usefull.o: $(SRC)/usefull.c $(SRC)/usefull.h

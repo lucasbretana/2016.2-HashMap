@@ -5,7 +5,6 @@
 #include "hashmap.h"
 
 unsigned int SIZE = TAM_INI;
-unsigned short int METHOD = 0;
 
 /*
   Generates the hash code of a key
@@ -18,7 +17,7 @@ h_code_t h0(void *k, int len){
     hash = hash * 16777619; // Multiply by prime number found to work well
     hash = hash ^ (p[i]); // xor next byte into the bottom of the hash
   }
-  return absh(hash);
+  return hash;
 }
 
 position_t h1(key *k){
@@ -30,14 +29,5 @@ position_t h2(key *k){
 }
 
 position_t position(key *k){
-  int i;
-  if(METHOD == 1){
-    return h1(k);
-  }else if(METHOD == 2){
-    for(i=0;i<SIZE;i++){
-
-    }
-  }else if(METHOD == 4){
-    return
-  }
+  return 0;
 }

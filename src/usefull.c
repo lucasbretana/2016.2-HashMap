@@ -27,10 +27,3 @@ int strcomp(const char *s1, const char *s2){
   }
   return 0;
 }
-
-h_code_t absh(h_code_t hash){
-  if(hash < 0)
-    return hash * -1;
-  else
-    return hash;
-}
