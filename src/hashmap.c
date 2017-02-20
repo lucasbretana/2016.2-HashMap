@@ -1,8 +1,8 @@
+#include "hashmap.h"
+#include "usefull.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "usefull.h"
-#include "hashmap.h"
 
 /*
   Generates the hash code of a key
@@ -28,4 +28,11 @@ position_t h2(key *k){
 
 position_t position(key *k){
   return 0;
+}
+
+void hash_insert(key *hashKey){
+}
+void hash_delete(key *hashKey){
+}
+void hash_get(key *hashKEy){
 }

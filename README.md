@@ -3,8 +3,10 @@ AED2 class project
 
 # Reference: http://eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx
 
+# To generate the debugging symbols export a variable DEBUG, with -g i.e. export DEBUG=-g
+
 # RUN
-Usage: ./VoltaQuerida.out [OPTION] < [ENTRY_FILE]
+Usage: ./HashMap.out [OPTION] < [ENTRY_FILE]
 
 Simulate the use of a Hash Map using the speficied method for treating colisin.
   -encadeamento		use the chaining method.

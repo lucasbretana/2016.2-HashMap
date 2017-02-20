@@ -14,13 +14,13 @@ typedef enum {
                 Quadratic = 3, 
                 Double_Hash = 4
               } ConflictMethods_t;
-extern const ConflictMethods_t METHOD;
+extern ConflictMethods_t METHOD;
 extern int HASH_SIZE;
 
 typedef long long int h_code_t;
 typedef unsigned int position_t;
 typedef char key;
 
-extern void hash_delete(char *);
-extern void hash_insert(char *);
-extern void hash_get(char *);
+void hash_delete(key *);
+void hash_insert(key *);
+void hash_get(key *);
