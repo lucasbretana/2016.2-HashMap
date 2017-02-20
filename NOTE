@@ -1,12 +1,8 @@
-Know types
-  key: is a valid key to hashed,
-    -> char
+Jonathas Augusto de Oliveira Conceição
 
-  h_code: is a hash code
-    -> long long int
+Lucas Eduardo Bretana
 
-  position: is a valid hash map position, cannot be negative neither bigger than the SIZE of the hash map
-    -> unsigned int
-
-Know bugs
-  the hash function (h0) is NOT generating the right hash codes
+TO DO:
+[ ] Finish main
+[ ] Implement the GET function
+[ ] Implement the DELETE function
