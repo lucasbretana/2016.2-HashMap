@@ -4,8 +4,6 @@
 #include "usefull.h"
 #include "hashmap.h"
 
-unsigned int SIZE = TAM_INI;
-
 /*
   Generates the hash code of a key
   Note that this do not return the hash map position
@@ -21,11 +19,11 @@ h_code_t h0(void *k, int len){
 }
 
 position_t h1(key *k){
-  return h0(k, length(k) % SIZE);
+  return h0(k, length(k) % HASH_SIZE);
 }
 
 position_t h2(key *k){
-  return 1 + ( h0(k, length(k)) % (SIZE - 1) );
+  return 1 + ( h0(k, length(k)) % (HASH_SIZE - 1) );
 }
 
 position_t position(key *k){

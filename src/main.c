@@ -7,6 +7,8 @@ void printHelp(char *);
 
 int main(int argc, char **argv) {
   ConflictMethods_t *M;
+  int HASH_SIZE = INITIAL_SIZE;
+
   M  = malloc(sizeof(ConflictMethods_t));
   if(argc != 2){
     fprintf(stderr, "Must specify the colision M! See --help");

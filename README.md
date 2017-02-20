@@ -13,6 +13,6 @@ Simulate the use of a Hash Map using the speficied method for treating colisin.
   -hash_duplo		use the double hash method.
   --help		    shows this text.
 
-Examples:
+Examples:  
   ./HashMap.out -hash_duplo < hash_keys.txt  
   ./HashMap.out -linear < keys.txt
