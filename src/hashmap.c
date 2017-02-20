@@ -35,6 +35,11 @@ void hash_insert(HashMap_t *hash, key_t *hashKey){
 void hash_delete(HashMap_t *hash, key_t *hashKey){
 }
 void hash_get(HashMap_t *hash, key_t *hashKey){
+    if(strcomp(hash->keys[h1(hashKey, length(hashKey)), hashKey) == 0){
+        // FIND IT
+        // No conflicts, first try
+        printf("Found it");
+    }
 }
 
 HashMap_t *hash_initialize(ConflictMethods_t method){
