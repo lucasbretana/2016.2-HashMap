@@ -15,11 +15,10 @@
 // Local functions
 void printHelp(char *);
 
-// Global (for real) variables
-int HASH_SIZE = INITIAL_SIZE;
-ConflictMethods_t METHOD;
 
 int main(int argc, char **argv) {
+  HashMap_t *Hash;
+
   if(argc != 2){
     fprintf(stderr, "Must specify the colision method! See --help");
     return INVALID_PARAMETER;
@@ -30,32 +29,29 @@ int main(int argc, char **argv) {
     return SUCCESS;
   }
   else if(strcomp(argv[1], CHAINING) == 0)
-    METHOD = Chaining;
+    Hash = hash_initialize(Chaining);
   else if(strcomp(argv[1], LINEAR) == 0)
-    METHOD = Linear;
+    Hash = hash_initialize(Linear);
   else if(strcomp(argv[1], QUADRATIC) == 0)
-    METHOD = Quadratic;
+    Hash = hash_initialize(Quadratic);
   else if(strcomp(argv[1], DOUBLE_HASH) == 0)
-     METHOD = Double_Hash;
+    Hash = hash_initialize(Double_Hash);
   else{
     fprintf(stderr, "Must specify a valid colision M!");
     printHelp(argv[0]);
     return INVALID_PARAMETER;
   }
-/*
- * void hash_delete(key *);
- * void hash_insert(key *);
- * void hash_get(key *);
- */
+
   char op[7];
-  key in[100];
+  key_t in[100];
+
   while(scanf("%s %s", op, in) == 2) {
     if(strcomp(op, DELETE) == 0)
-      hash_delete(in);
+      hash_delete(Hash, in);
     else if(strcomp(op, INSERT) == 0)
-      hash_insert(in);
+      hash_insert(Hash, in);
     else if(strcomp(op, GET) == 0)
-      hash_get(in);
+      hash_get(Hash, in);
     else
       fprintf(stderr, "Invalid operation (%s).", op);
   }
