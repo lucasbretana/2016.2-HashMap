@@ -5,7 +5,9 @@ Lucas Eduardo Bretana
 TO DO:
 [x] Finish main
 [ ] The HashMap itself needs to alocate memory deferently depending on the mehod
-    If the method is the chaining, the insted of a **key it needs a list of **key
+    If the method is the chaining, the insted of a key_t ** it needs a list of key_t **
+    My initial thougth was to use a void *, but I need a key_t **, so a create a key_p (aka: key_t *)
+    so the hash struct can have a void * that could lead to a node_t * or a key_p (aka: key_t *)
 [ ] Implement the GET function
 ->[ ] The search mechanism needs to be adaptative about the method used
 [ ] Implement the DELETE function

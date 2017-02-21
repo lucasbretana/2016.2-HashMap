@@ -11,6 +11,7 @@
 typedef long long int h_code_t;
 typedef unsigned int position_t;
 typedef char key_t;
+typedef key_t *key_p;
 typedef enum _ConflictMethods_t{
                 Chaining = 1,
                 Linear = 2,
@@ -18,7 +19,7 @@ typedef enum _ConflictMethods_t{
                 Double_Hash = 4
 } ConflictMethods_t;
 typedef struct _HashMap_t{
-                key_t **keys;
+                void **keys;
                 int size;
                 ConflictMethods_t method;
 } HashMap_t;

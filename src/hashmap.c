@@ -18,24 +18,24 @@ h_code_t h0(void *k, int len){
   return hash;
 }
 
-position_t h1(key_t *k, size_t size){
+position_t h1(key_pk, size_t size){
   return h0(k, length(k) % size);
 }
 
-position_t h2(key_t *k, size_t size){
+position_t h2(key_pk, size_t size){
   return 1 + ( h0(k, length(k)) % (size - 1) );
 }
 
-position_t position(key_t *k){
+position_t position(key_pk){
   return 0;
 }
 
-void hash_insert(HashMap_t *hash, key_t *hashKey){
+void hash_insert(HashMap_t *hash, key_phashKey){
 }
-void hash_delete(HashMap_t *hash, key_t *hashKey){
+void hash_delete(HashMap_t *hash, key_phashKey){
 }
-void hash_get(HashMap_t *hash, key_t *hashKey){
-    if(strcomp(hash->keys[h1(hashKey, length(hashKey)), hashKey) == 0){
+void hash_get(HashMap_t *hash, key_phashKey){
+    if(strcomp(hash->keys[h1(hashKey, length(hashKey))], hashKey) == 0){
         // FIND IT
         // No conflicts, first try
         printf("Found it");
@@ -46,6 +46,10 @@ HashMap_t *hash_initialize(ConflictMethods_t method){
     HashMap_t *h = malloc(sizeof(HashMap_t));
     h->size = INITIAL_SIZE;
     h->method = method;
-    h->keys = malloc(sizeof(key_t *) * h->size);
+    if(method == Chaining)
+      //h->keys = createNode();
+    else{
+      h->keys = malloc(sizeof(key_p) * h->size);
+    }
     return h;
 }
