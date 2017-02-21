@@ -1,3 +1,5 @@
+#ifndef HASHMAP_H
+#define HASHMAP_H
 // Colision method
 #define HELP "--help"
 #define CHAINING "-encadeamento"
@@ -9,6 +11,7 @@
 #define ALPHA 0.75
 
 typedef long long int h_code_t;
+typedef unsigned int bulk_t;
 typedef unsigned int position_t;
 typedef char key_t;
 typedef key_t *key_p;
@@ -20,7 +23,7 @@ typedef enum _ConflictMethods_t{
 } ConflictMethods_t;
 typedef struct _HashMap_t{
                 void *keys;
-                int size;
+                bulk_t size;
                 ConflictMethods_t method;
 } HashMap_t;
 
@@ -28,7 +31,12 @@ typedef struct _HashMap_t{
 extern int HASH_SIZE;
 extern key **HashMap;*/
 
-HashMap_t *hash_initialize(ConflictMethods_t);
 void hash_delete(HashMap_t *, key_t *);
 // void hash_insert(HashMap_t *, key_t *);
 // void hash_get(HashMap_t *, key_t *);
+h_code_t h0(void *, int);
+position_t h1(key_p, bulk_t);
+position_t h2(key_p, bulk_t);
+position_t position(key_p);
+
+#endif

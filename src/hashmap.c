@@ -18,11 +18,11 @@ h_code_t h0(void *k, int len){
   return hash;
 }
 
-position_t h1(key_p k, size_t size){
+position_t h1(key_p k, bulk_t size){
   return h0(k, length(k) % size);
 }
 
-position_t h2(key_p k, size_t size){
+position_t h2(key_p k, bulk_t size){
   return 1 + ( h0(k, length(k)) % (size - 1) );
 }
 
@@ -66,24 +66,23 @@ void hash_delete(HashMap_t *hash, key_p hashKey){
       fprintf(stderr, "There was something wrong! The conflict methodis not valid!\n");
       break;
     }
-  list_insert((hash->keys)+ hashed_by_h1, hashKey);
 }
 
-HashMap_t *hash_initialize(ConflictMethods_t method){
-    HashMap_t *h = malloc(sizeof(HashMap_t));
-    h->size = INITIAL_SIZE;
-    h->method = method;
-    if(method == Chaining){
-      h->keys = malloc(sizeof(hashList*) * h->size);
-      void *p = h->keys;
-      for (size_t i = 0; i < h->size; i++) {
-        h->keys += i;
-        h->keys = (void *) list_create();
-      }
-      h->keys = p;
-    }
-    else{
-      h->keys = malloc(sizeof(key_p) * h->size);
-    }
-    return h;
-}
+// HashMap_t *hash_initialize(ConflictMethods_t method){
+//     HashMap_t *h = malloc(sizeof(HashMap_t));
+//     h->size = INITIAL_SIZE;
+//     h->method = method;
+//     if(method == Chaining){
+//       h->keys = malloc(sizeof(hashList*) * h->size);
+//       void *p = h->keys;
+//       for (bulk_t i = 0; i < h->size; i++) {
+//         h->keys += i;
+//         h->keys = (void *) list_create();
+//       }
+//       h->keys = p;
+//     }
+//     else{
+//       h->keys = malloc(sizeof(key_p) * h->size);
+//     }
+//     return h;
+// }
