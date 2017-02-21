@@ -31,24 +31,65 @@ position_t position(key_p k){
 }
 
 void hash_insert(HashMap_t *hash, key_p hashKey){
+  position_t hashed_by_h1 = h1(hashKey, (*hash).size);
+  int conflict = 0;
+  char *aux;
+  switch ((*hash).method) {
+    case Chaining:
+      conflict += list_insert((*hash).keys, hashKey);
+      break;
+    //All the next 'cases' need to run this test
+    if(((char *)(*hash).keys + hashed_by_h1) == NULL) {
+      void *p = ((char *)(*hash).keys + hashed_by_h1);
+      p = hashKey;
+      p = NULL;
+      break; //Leaves if that was no conflict
+    }
+    case Linear:
+      aux = ((char *)(*hash).keys + hashed_by_h1);
+      do {
+        aux += 1;
+        conflict += 1;
+      } while(aux!=NULL);
+      aux = hashKey;
+      break;
+    case Quadratic:
+      aux = ((char *)(*hash).keys + hashed_by_h1);
+      for (size_t i = 0; aux!=NULL; i++) {
+          aux += (i*i);
+          conflict += 1;
+      }
+      aux = hashKey;
+      break;
+    case Double_Hash:
+      break;
+  }
+  list_insert((hash->keys)+ hashed_by_h1, hashKey);
 }
 void hash_delete(HashMap_t *hash, key_p hashKey){
 }
 void hash_get(HashMap_t *hash, key_p hashKey){
-  if(hash->method != Chaining)
-    if(strcomp(((key_p) hash->keys[h1(hashKey, length(hashKey))]), hashKey) == 0){
-        // FIND IT0
-        // No confl0icts, first try
-        printf("Found it");
-    }
+  if(hash->method != Chaining){}
+    // if(strcomp(((key_p) hash->keys[h1(hashKey, length(hashKey))]), hashKey) == 0){
+    //     // FIND IT0
+    //     // No confl0icts, first try
+    //     printf("Found it");
+    // }
 }
 
 HashMap_t *hash_initialize(ConflictMethods_t method){
     HashMap_t *h = malloc(sizeof(HashMap_t));
     h->size = INITIAL_SIZE;
     h->method = method;
-    if(method == Chaining)
-      h->keys = (void *) list_create(NULL);
+    if(method == Chaining){
+      h->keys = malloc(sizeof(hashList*) * h->size);
+      void *p = h->keys;
+      for (size_t i = 0; i < h->size; i++) {
+        h->keys += i;
+        h->keys = (void *) list_create();
+      }
+      h->keys = p;
+    }
     else{
       h->keys = malloc(sizeof(key_p) * h->size);
     }

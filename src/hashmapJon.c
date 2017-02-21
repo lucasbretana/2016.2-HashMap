@@ -33,21 +33,20 @@ position_t position(key_p k){
 void hash_insert(HashMap_t *hash, key_p hashKey){
   position_t hashed_by_h1 = h1(hashKey, (*hash).size);
   int conflict = 0;
+  char *aux;
   switch ((*hash).method) {
     case Chaining:
       conflict += list_insert((*hash).keys, hashKey);
       break;
+    //All the next 'cases' need to run this test
+    if(((char *)(*hash).keys + hashed_by_h1) == NULL) {
+      void *p = ((char *)(*hash).keys + hashed_by_h1);
+      p = hashKey;
+      p = NULL;
+      break; //Leaves if that was no conflict
+    }
     case Linear:
-    case Quadratic:
-    case Double_Hash:
-      if(((char **)(*hash).keys + hashed_by_h1) == NULL) {
-        void *p = ((char **)(*hash).keys + hashed_by_h1);
-        p = hashKey;
-        p = NULL;
-        break;
-      }
-    case Linear:
-      void *aux = ((char **)(*hash).keys + hashed_by_h1);
+      aux = ((char *)(*hash).keys + hashed_by_h1);
       do {
         aux += 1;
         conflict += 1;
@@ -55,7 +54,7 @@ void hash_insert(HashMap_t *hash, key_p hashKey){
       aux = hashKey;
       break;
     case Quadratic:
-    void *aux = ((char **)(*hash).keys + hashed_by_h1);
+      aux = ((char *)(*hash).keys + hashed_by_h1);
       for (size_t i = 0; aux!=NULL; i++) {
           aux += (i*i);
           conflict += 1;
