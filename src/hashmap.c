@@ -1,9 +1,9 @@
-#include "hashmap.h"
-#include "usefull.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
+#include "hashmap.h"
+#include "usefull.h"
+#include "linkedList.h"
 /*
   Generates the hash code of a key
   Note that this do not return the hash map position
@@ -18,26 +18,27 @@ h_code_t h0(void *k, int len){
   return hash;
 }
 
-position_t h1(key_pk, size_t size){
+position_t h1(key_p k, size_t size){
   return h0(k, length(k) % size);
 }
 
-position_t h2(key_pk, size_t size){
+position_t h2(key_p k, size_t size){
   return 1 + ( h0(k, length(k)) % (size - 1) );
 }
 
-position_t position(key_pk){
+position_t position(key_p k){
   return 0;
 }
 
-void hash_insert(HashMap_t *hash, key_phashKey){
+void hash_insert(HashMap_t *hash, key_p hashKey){
 }
-void hash_delete(HashMap_t *hash, key_phashKey){
+void hash_delete(HashMap_t *hash, key_p hashKey){
 }
-void hash_get(HashMap_t *hash, key_phashKey){
-    if(strcomp(hash->keys[h1(hashKey, length(hashKey))], hashKey) == 0){
-        // FIND IT
-        // No conflicts, first try
+void hash_get(HashMap_t *hash, key_p hashKey){
+  if(hash->method != Chaining)
+    if(strcomp(((key_p) hash->keys[h1(hashKey, length(hashKey))]), hashKey) == 0){
+        // FIND IT0
+        // No confl0icts, first try
         printf("Found it");
     }
 }
@@ -47,7 +48,7 @@ HashMap_t *hash_initialize(ConflictMethods_t method){
     h->size = INITIAL_SIZE;
     h->method = method;
     if(method == Chaining)
-      //h->keys = createNode();
+      h->keys = (void *) list_create(NULL);
     else{
       h->keys = malloc(sizeof(key_p) * h->size);
     }

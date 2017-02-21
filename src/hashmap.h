@@ -19,7 +19,7 @@ typedef enum _ConflictMethods_t{
                 Double_Hash = 4
 } ConflictMethods_t;
 typedef struct _HashMap_t{
-                void **keys;
+                void *keys;
                 int size;
                 ConflictMethods_t method;
 } HashMap_t;
