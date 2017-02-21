@@ -38,19 +38,29 @@ void hash_insert(HashMap_t *hash, key_p hashKey){
       conflict += list_insert((*hash).keys, hashKey);
       break;
     case Linear:
-      if(((*hash).keys + hashed_by_h1) == NULL) {
-        void *p = ((*hash).keys + hashed_by_h1);
+    case Quadratic:
+    case Double_Hash:
+      if(((char **)(*hash).keys + hashed_by_h1) == NULL) {
+        void *p = ((char **)(*hash).keys + hashed_by_h1);
         p = hashKey;
         p = NULL;
-      }else{
-        void *aux = ((*hash).keys + hashed_by_h1);
-        do {
-          aux += 1;
-        } while(aux!=NULL);
-        aux = hashKey;
+        break;
       }
+    case Linear:
+      void *aux = ((char **)(*hash).keys + hashed_by_h1);
+      do {
+        aux += 1;
+        conflict += 1;
+      } while(aux!=NULL);
+      aux = hashKey;
       break;
     case Quadratic:
+    void *aux = ((char **)(*hash).keys + hashed_by_h1);
+      for (size_t i = 0; aux!=NULL; i++) {
+          aux += (i*i);
+          conflict += 1;
+      }
+      aux = hashKey;
       break;
     case Double_Hash:
       break;
