@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "hashmap.h"
+#include "hashmapJon.h"
 #include "usefull.h"
 #include "linkedList.h"
 /*
@@ -31,40 +32,55 @@ position_t position(key_p k){
 }
 
 void hash_insert(HashMap_t *hash, key_p hashKey){
-  position_t hashed_by_h1 = h1(hashKey, (*hash).size);
+  position_t h1_position = h1(hashKey, (*hash).size);
+  position_t h2_position;
   int conflict = 0;
+  int probing = 0;
   char *aux;
   switch ((*hash).method) {
     case Chaining:
       conflict += list_insert((*hash).keys, hashKey);
       break;
     //All the next 'cases' need to run this test
-    if(((char *)(*hash).keys + hashed_by_h1) == NULL) {
-      void *p = ((char *)(*hash).keys + hashed_by_h1);
+    if(((char *)(*hash).keys + h1_position) == NULL) {
+      void *p = ((char *)(*hash).keys + h1_position);
       p = hashKey;
       p = NULL;
       break; //Leaves if that was no conflict
     }
+    aux = ((char *)(*hash).keys + h1_position); //Set it variable as it is the same in all 'cases'.
     case Linear:
-      aux = ((char *)(*hash).keys + hashed_by_h1);
-      do {
-        aux += 1;
+      // aux = ((char *)(*hash).keys + h1_position);
+      for (probing = h1_position; aux != NULL; probing++) {
+        if(probing >= (*hash).size){ //Reached the end of the hash, go back to the top.
+          aux = (*hash).keys;
+        }else{
+          aux += 1;
+        }
         conflict += 1;
-      } while(aux!=NULL);
+      }
       aux = hashKey;
       break;
     case Quadratic:
-      aux = ((char *)(*hash).keys + hashed_by_h1);
-      for (size_t i = 0; aux!=NULL; i++) {
+      // aux = ((char *)(*hash).keys + h1_position);
+      for (size_t i = 0, probing = h1_position; aux != NULL; i++, probing++) {
+        if(probing >= (*hash).size){ //Reached the end of the hash, go back to the top.
+          aux = (*hash).keys;
+        }else{
           aux += (i*i);
-          conflict += 1;
+        }
       }
       aux = hashKey;
       break;
     case Double_Hash:
+      // aux = ((char *)(*hash).keys + h1_position);
+      h2_position = h2(hashKey, (*hash).size);
+      for (size_t i = 0; aux != NULL; i++) {
+        aux = (*hash).keys + ((h1_position + (i * h2_position)) % (*hash).size);
+      }
+      aux = hashKey;
       break;
   }
-  list_insert((hash->keys)+ hashed_by_h1, hashKey);
 }
 void hash_delete(HashMap_t *hash, key_p hashKey){
 }
