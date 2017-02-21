@@ -10,7 +10,7 @@ SRC = src
 BIN = bin
 
 # Objects
-OBJ = main hashmap usefull
+OBJ = main hashmap usefull linkedList
 
 #===================================================================
 all: $(addsuffix .o, $(OBJ) )
@@ -19,11 +19,14 @@ all: $(addsuffix .o, $(OBJ) )
 main.o: $(SRC)/main.c
 	$(CC) $(CC_FLAG) -c $(SRC)/main.c -o $(BIN)/main.o
 
-hashmap.o: $(SRC)/hashmap.c $(SRC)/hashmap.h 
+hashmap.o: $(SRC)/hashmap.c $(SRC)/hashmap.h
 	$(CC) $(CC_FLAG) -c $(SRC)/hashmap.c -o $(BIN)/hashmap.o
 
 usefull.o: $(SRC)/usefull.c $(SRC)/usefull.h
 	$(CC) $(CC_FLAG) -c $(SRC)/usefull.c -o $(BIN)/usefull.o
+
+linkedList.o: $(SRC)/linkedList.c $(SRC)/linkedList.h
+	$(CC) $(CC_FLAG) -c $(SRC)/linkedList.c -o $(BIN)/linkedList.o
 
 clean:
 	$(RM) $(RM_FLAG) $(BIN)/*.o
