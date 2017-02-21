@@ -30,6 +30,7 @@ position_t position(key_p k){
   return 0;
 }
 
+
 /**
  * If it is Chaining, then to remove it must find in the list
  * If is is Linear then is start to look in the hash list, stop when you foun it, work it is not in the list
@@ -65,22 +66,22 @@ void hash_delete(HashMap_t *hash, key_p hashKey){
       fprintf(stderr, "There was something wrong! The conflict methodis not valid!\n");
       break;
     }
+  list_insert((hash->keys)+ hashed_by_h1, hashKey);
 }
-// void hash_get(HashMap_t *hash, key_p hashKey){
-//   if(hash->method != Chaining)
-//     if(strcomp(((key_p) hash->keys[h1(hashKey, length(hashKey))]), hashKey) == 0){
-//         // FIND IT0
-//         // No confl0icts, first try
-//         printf("Found it");
-//     }
-// }
 
 HashMap_t *hash_initialize(ConflictMethods_t method){
     HashMap_t *h = malloc(sizeof(HashMap_t));
     h->size = INITIAL_SIZE;
     h->method = method;
-    if(method == Chaining)
-      h->keys = (void *) list_create(NULL);
+    if(method == Chaining){
+      h->keys = malloc(sizeof(hashList*) * h->size);
+      void *p = h->keys;
+      for (size_t i = 0; i < h->size; i++) {
+        h->keys += i;
+        h->keys = (void *) list_create();
+      }
+      h->keys = p;
+    }
     else{
       h->keys = malloc(sizeof(key_p) * h->size);
     }

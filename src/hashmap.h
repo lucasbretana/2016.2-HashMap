@@ -4,7 +4,7 @@
 #define LINEAR "-linear"
 #define QUADRATIC "-quadratica"
 #define DOUBLE_HASH "-hash_duplo"
-
+// Static values
 #define INITIAL_SIZE 500
 #define ALPHA 0.75
 
@@ -30,5 +30,5 @@ extern key **HashMap;*/
 
 HashMap_t *hash_initialize(ConflictMethods_t);
 void hash_delete(HashMap_t *, key_t *);
-void hash_insert(HashMap_t *, key_t *);
-void hash_get(HashMap_t *, key_t *);
+// void hash_insert(HashMap_t *, key_t *);
+// void hash_get(HashMap_t *, key_t *);

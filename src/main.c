@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "usefull.h"
 #include "hashmap.h"
+#include "hashmapJon.h"
+
+#define KEY_MAX_SIZE 100
 
 // Operations
 #define GET "GET"
@@ -43,7 +46,7 @@ int main(int argc, char **argv) {
   }
 
   char op[7];
-  key_t in[100];
+  key_t *in = malloc(sizeof(key_p) * KEY_MAX_SIZE);
 
   while(scanf("%s %s", op, in) == 2) {
     if(strcomp(op, DELETE) == 0)

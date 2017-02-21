@@ -22,6 +22,9 @@ main.o: $(SRC)/main.c
 hashmap.o: $(SRC)/hashmap.c $(SRC)/hashmap.h
 	$(CC) $(CC_FLAG) -c $(SRC)/hashmap.c -o $(BIN)/hashmap.o
 
+hashmapJon.o: $(SRC)/hashmapJon.c $(SRC)/hashmapJon.h
+	$(CC) $(CC_FLAG) -c $(SRC)/hashmapJon.c -o $(BIN)/hashmapJon.o
+
 usefull.o: $(SRC)/usefull.c $(SRC)/usefull.h
 	$(CC) $(CC_FLAG) -c $(SRC)/usefull.c -o $(BIN)/usefull.o
 
