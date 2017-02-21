@@ -24,22 +24,24 @@ hashList* list_create(){
 
 /**
  * Insert 'value' at the end of a list.
+ * @returns 0 if 'value' was inserted in the head.
  */
-void list_insert(hashList *head, char *value){
+int list_insert(hashList *head, char *value){
   hashList *node;
   hashList *last;
 
   if(head == NULL){
     fprintf(stderr, "Can't insert element in a empty list\n");
-    return;
+    return -1;
   }
   node = malloc(sizeof(hashList));
   if (node == NULL) {
     fprintf(stderr, "Failed to insert element list\nmalloc returned NULL\n");
-    return;
+    return -1;
   }
   if((*head).data == NULL){ //If head is empty, write info in head;
     (*head).data = value;
+    return 0;
   }else{
     if ((*head).next != NULL) { //If head isn't the last element then
       do{                       //Go to the last element
@@ -52,9 +54,10 @@ void list_insert(hashList *head, char *value){
     (*node).prev = last;
     (*node).next = NULL;
     (*last).next = node;
+    //Now the new node is the new last elemnet.
+    return 1;
   }
-  //Now the new node is the new last elemnet.
-  return;
+
 }
 
 

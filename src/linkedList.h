@@ -6,5 +6,5 @@ typedef struct hashList{
 
 hashList* list_create();
 hashList* list_get(hashList *, char *);
-void list_insert(hashList *, char *);
+int list_insert(hashList *, char *);
 hashList* list_delete(hashList *, char *);
