@@ -8,19 +8,26 @@
 #define INITIAL_SIZE 500
 #define ALPHA 0.75
 
-typedef enum {
-                Chaining = 1, 
-                Linear = 2, 
-                Quadratic = 3, 
-                Double_Hash = 4
-              } ConflictMethods_t;
-extern ConflictMethods_t METHOD;
-extern int HASH_SIZE;
-
 typedef long long int h_code_t;
 typedef unsigned int position_t;
-typedef char key;
+typedef char key_t;
+typedef enum _ConflictMethods_t{
+                Chaining = 1,
+                Linear = 2,
+                Quadratic = 3,
+                Double_Hash = 4
+} ConflictMethods_t;
+typedef struct _HashMap_t{
+                key_t **keys;
+                int size;
+                ConflictMethods_t method;
+} HashMap_t;
 
-void hash_delete(key *);
-void hash_insert(key *);
-void hash_get(key *);
+/*extern ConflictMethods_t METHOD;
+extern int HASH_SIZE;
+extern key **HashMap;*/
+
+HashMap_t *hash_initialize(ConflictMethods_t);
+void hash_delete(HashMap_t *, key_t *);
+void hash_insert(HashMap_t *, key_t *);
+void hash_get(HashMap_t *, key_t *);
