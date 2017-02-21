@@ -4,7 +4,7 @@ typedef struct hashList{
   struct hashList *prev;
 }hashList;
 
-hashList* list_create(char *);
+hashList* list_create();
 hashList* list_get(hashList *, char *);
 void list_insert(hashList *, char *);
-void list_delete(hashList *, char *);
+hashList* list_delete(hashList *, char *);
