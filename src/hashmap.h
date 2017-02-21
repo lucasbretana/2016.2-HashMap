@@ -25,6 +25,10 @@ typedef struct _HashMap_t{
                 void *keys;
                 bulk_t size;
                 ConflictMethods_t method;
+                int numConflicts;
+                unsigned long long int insertTime;
+                unsigned long long int deleteTime;
+                unsigned long long int getTime;
 } HashMap_t;
 
 /*extern ConflictMethods_t METHOD;
