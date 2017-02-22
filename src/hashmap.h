@@ -25,7 +25,7 @@ typedef struct _HashMap_t{
                 void *keys;
                 bulk_t size;
                 ConflictMethods_t method;
-                int numConflicts;
+                int hashConflicts;
                 unsigned long long int insertTime;
                 unsigned long long int deleteTime;
                 unsigned long long int getTime;
@@ -38,7 +38,7 @@ typedef struct _ReturnLog{
                 h_code_t code;
                 unsigned int indH1;
                 unsigned int indHash;
-                unsigned int numConflicts;
+                unsigned int localConflicts;
                 Boolean_t success;
 } ReturnLog_t;
 
