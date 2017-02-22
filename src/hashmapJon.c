@@ -17,7 +17,7 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
   operationLog.indH1 = h1_position;
   int conflict = 0;
   size_t probing = 0;
-  char *aux;
+  char **aux;
   switch ((*hash).method) {
     case Chaining:
       conflict = list_insert(((*hash).keys + h1_position * sizeof(hashList *)), hashKey);
@@ -25,73 +25,86 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
       switch (conflict) {
         case 0:
           conflict = 0;
-          operationLog.localConflicts = 0;
           operationLog.success = TRUE;
           break;
         case 1:
           conflict = 0;
-          operationLog.localConflicts = 0;
           operationLog.success = FALSE;
           break;
         case 2:
           conflict = 1;
-          operationLog.localConflicts = 1;
           operationLog.success = FALSE;
           break;
         case 3:
           conflict = 1;
-          operationLog.localConflicts = 1;
           operationLog.success = TRUE;
           break;
         default:
           conflict = -1;
-          operationLog.localConflicts = -1;
           operationLog.success = FALSE;
           break;
       }
       break;
     //All the next 'cases' need to run this test
-    if(((*hash).keys + h1_position * sizeof(char *)) == NULL) {
-      char **p;
-      p = ((*hash).keys + h1_position * sizeof(char *));
-      *p = hashKey;
-
-      operationLog.indHash = h1_position;
-      operationLog.success = TRUE;
-      break; //Leaves if that was no conflict
-    }
     case Linear:
-      for (probing = h1_position; aux != NULL; probing++) {
-        aux = (*hash).keys + ((h1_position + probing) % (*hash).size) * sizeof(char *);
-        conflict += 1;
-        if (strcomp(aux, hashKey) == 0) {
+      aux = (((char **)(*hash).keys) + (h1_position % (*hash).size));
+      if((*aux) == NULL) {
+        // aux = ((*hash).keys + h1_position * sizeof(char *));
+        (*aux) = malloc(length(hashKey) * sizeof(char *));
+        strcopy(*aux, hashKey);
+
+        operationLog.indHash = h1_position;
+        operationLog.success = TRUE;
+        aux = (((char **)(*hash).keys) + ((h1_position + 1) % (*hash).size));
+        // if ((*aux) == NULL) {
+        //   printf("PONTEIRO IGUAL A ZERO\n");
+        // }else{
+        //   printf("NOVO INDICE DO AUX:%i\nNOVO PONTEIRO DO AUX:%p\nNOVO VALOR:%s\n", ((h1_position + 1) % (*hash).size), aux, *(aux));
+        // }
+        break; //Leaves if that was no conflict
+      }
+      // if ((*aux) == NULL) {
+      //   printf("PONTEIRO IGUAL A ZERO\n");
+      // }else{
+      //   printf("134646541684NOVO INDICE DO AUX:%i\nNOVO PONTEIRO DO AUX:%p\nNOVO VALOR:%s\n", ((h1_position + 1) % (*hash).size), aux, *(aux));
+      // }
+
+      operationLog.success = TRUE;
+      for (probing = 0; (*aux) != NULL; probing++) {
+        if (strcomp((*aux), hashKey) == 0) {
           operationLog.success = FALSE;
           break;
         }
+        aux = (((char **)(*hash).keys) + ((h1_position + probing) % (*hash).size));
+        conflict += 1;
+        // printf("NOVO INDICE DO AUX:%i\nNOVO PONTEIRO DO AUX:%p\nNOVO VALOR:%s\n", ((h1_position + probing) % (*hash).size), aux, *aux);
       }
-      aux = hashKey;
+      operationLog.indHash = (h1_position + probing) % (*hash).size;
+
       break;
     case Quadratic:
-      for (probing = 0; aux != NULL; probing++) {
-        aux = (*hash).keys + ((h1_position + (probing * probing)) % (*hash).size) * sizeof(char *);
+      aux = ((*hash).keys + (h1_position * sizeof(char *)));
+      for (probing = 0; (*aux) != NULL; probing++) {
+        (*aux) = (*hash).keys + ((h1_position + (probing * probing)) % (*hash).size) * sizeof(char *);
         conflict += 1;
-        if (strcomp(aux, hashKey) == 0) {
+        if (strcomp((*aux), hashKey) == 0) {
           operationLog.success = FALSE;
           break;
         }
       }
-      aux = hashKey;
+      (*aux) = hashKey;
       break;
     case Double_Hash:
+      aux = ((*hash).keys + (h1_position * sizeof(char *)));
       h2_position = h2(hashKey, (*hash).size);
-      for (probing = 0; aux != NULL; probing++) {
-        aux = (*hash).keys + ((h1_position + (probing * h2_position)) % (*hash).size) * sizeof(char *);
+      for (probing = 0; (*aux) != NULL; probing++) {
+        (*aux) = (*hash).keys + ((h1_position + (probing * h2_position)) % (*hash).size) * sizeof(char *);
       }
-      if (strcomp(aux, hashKey) == 0) {
+      if (strcomp((*aux), hashKey) == 0) {
         operationLog.success = FALSE;
         break;
       }
-      aux = hashKey;
+      (*aux) = hashKey;
       break;
   }
   (*hash).hashConflicts += conflict;
@@ -100,7 +113,8 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
 }
 
 ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
-
+  ReturnLog_t a;
+  return a;
 }
 
 HashMap_t *hash_initialize(ConflictMethods_t method){
@@ -112,13 +126,15 @@ HashMap_t *hash_initialize(ConflictMethods_t method){
       h->keys = malloc(sizeof(hashList*) * h->size);
       void *p = h->keys;
       for (size_t i = 0; i < h->size; i++) {
-        h->keys = ((hashList*) h->keys) + i;
-        h->keys = (void *) list_create();
+        h->keys = h->keys + i * sizeof(hashList *);
+        h->keys = list_create();
       }
       h->keys = p;
-    }
-    else{
-      h->keys = malloc(sizeof(key_p) * h->size);
+    }else{
+      h->keys = malloc(sizeof(char **) * h->size); //Vector of pointers
+      for (size_t i = 0; i < h->size; i++) {
+        *(((char **) h->keys) + i) = NULL;
+      }
     }
     return h;
 }
