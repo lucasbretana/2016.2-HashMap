@@ -54,10 +54,10 @@ ReturnLog_t log;
       log = hash_delete(Hash, in);
       printf("%s \"%s\" %lld %u %u %u %s", DELETE, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
     }else if(strcomp(op, INSERT) == 0){
-      /*log = */hash_insert(Hash, in);
+      log = hash_insert(Hash, in);
       printf("%s \"%s\" %lld %u %u %u %s", DELETE, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
     }else if(strcomp(op, GET) == 0){
-      /*log = */hash_get(Hash, in);
+      log = hash_get(Hash, in);
       printf("%s \"%s\" %lld %u %u %u %s", DELETE, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
     }else
       fprintf(stderr, "Invalid operation (%s).", op);
