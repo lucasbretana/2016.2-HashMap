@@ -31,8 +31,8 @@ typedef struct _HashMap_t{
                 unsigned long long int getTime;
 } HashMap_t;
 typedef enum _boolean_t{
-              true,
-              false = 0
+              TRUE = 1,
+              FALSE = 0
 } Boolean_t;
 typedef struct _ReturnLog{
                 h_code_t code;

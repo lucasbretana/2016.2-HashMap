@@ -37,6 +37,13 @@ position_t position(key_p k){
  */
 ReturnLog_t hash_delete(HashMap_t *hash, key_p hashKey){
   position_t startPoint = 0;
+  ReturnLog_t log;
+  log.code = 10L;
+  log.indH1 = 1;
+  log.indHash = 1;
+  log.localConflicts = 0;
+  log.success = TRUE;
+  if(1==1) return log;
   int conflict = 0;
   switch(hash->method){
     case Chaining:
@@ -68,6 +75,5 @@ ReturnLog_t hash_delete(HashMap_t *hash, key_p hashKey){
       fprintf(stderr, "There was something wrong! The conflict methodis not valid!\n");
       break;
     }
-    ReturnLog_t log;
     return log;
 }
