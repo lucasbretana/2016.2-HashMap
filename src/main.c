@@ -48,14 +48,18 @@ int main(int argc, char **argv) {
   char op[7];
   key_t *in = malloc(sizeof(key_p) * KEY_MAX_SIZE);
 
+ReturnLog_t log;
   while(scanf("%s %s", op, in) == 2) {
-    if(strcomp(op, DELETE) == 0)
-      hash_delete(Hash, in);
-    else if(strcomp(op, INSERT) == 0)
-      hash_insert(Hash, in);
-    else if(strcomp(op, GET) == 0)
-      hash_get(Hash, in);
-    else
+    if(strcomp(op, DELETE) == 0){
+      log = hash_delete(Hash, in);
+      printf("%s \"%s\" %lld %u %u %u %s", DELETE, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
+    }else if(strcomp(op, INSERT) == 0){
+      /*log = */hash_insert(Hash, in);
+      printf("%s \"%s\" %lld %u %u %u %s", DELETE, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
+    }else if(strcomp(op, GET) == 0){
+      /*log = */hash_get(Hash, in);
+      printf("%s \"%s\" %lld %u %u %u %s", DELETE, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
+    }else
       fprintf(stderr, "Invalid operation (%s).", op);
   }
 
