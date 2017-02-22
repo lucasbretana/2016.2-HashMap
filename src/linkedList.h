@@ -10,5 +10,5 @@ typedef struct hashList{
 hashList* list_create();
 hashList* list_get(hashList *, char *);
 int list_insert(hashList *, char *);
-hashList* list_delete(hashList *, char *);
+int list_delete(hashList **, char *);
 #endif

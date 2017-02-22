@@ -44,10 +44,8 @@ int list_insert(hashList *head, char *value){
     return 0;
   }else{
     if ((*head).next != NULL) { //If head isn't the last element then
-      if (strcomp((*head).data,value) == 0) return -2; //Value in the head
       do{                       //Go to the last element
         last = (*head).next;
-        if (strcomp((*last).data,value) == 0) return -3; //Value already inside the list
       }while((*last).next != NULL);
     }else{                      //Else
       last = head;              //The head is the last element
@@ -57,7 +55,7 @@ int list_insert(hashList *head, char *value){
     (*node).next = NULL;
     (*last).next = node;
     //Now the new node is the new last elemnet.
-    return 1; //Successfully written to the list
+    return 1;
   }
 
 }
@@ -82,25 +80,27 @@ hashList* list_get(hashList *head, char *info){
 /**
  * Removes 'info' from list poited by head;
  */
-hashList* list_delete(hashList *head, char *info){
+int list_delete(hashList **listHead, char *info){
+  hashList *head = *listHead;
   hashList *target;
   hashList *next, *prev;
-
+  int nConfl = 0;
   target = list_get(head, info);
   if (target == NULL) {     //Element was not in the list.
-    return head;
+    *listHead = head;
   }
   next = (*target).next;
   prev = (*target).prev;
 
   if(target == head){
     free((*target).data);
-    (*target).data = NULL;  //Leave head empty.
+    (*target).data = NULL;        //Leave head empty.
     if ((*target).next != NULL) { //If the head is not the last element I can free it.
       free(target);
-      target = next;        //Now the second elemnet is the new head.
+      target = next;              //Now the second elemnet is the new head.
     }
-  }else{                    //The target is a node.
+  }else{                          //The target is a node.
+    nConfl = 1;
     if(prev != NULL){
       (*prev).next=next;
     }
@@ -109,6 +109,6 @@ hashList* list_delete(hashList *head, char *info){
     }
     free(target);
   }
-
-  return target;
+  *listHead = target;
+  return nConfl;
 }
