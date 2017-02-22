@@ -15,7 +15,7 @@ h_code_t h0(void *k, int len){
     hash = hash * 16777619;  	// Multiply by prime number found to work well
     hash = hash ^ (p[i]); 	// xor next byte into the bottom of the hash
   }
-  return hash;
+  return llabs(hash);
 }
 
 position_t h1(key_p k, bulk_t size, h_code_t *code){

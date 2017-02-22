@@ -20,8 +20,7 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
   char *aux;
   switch ((*hash).method) {
     case Chaining:
-      conflict = list_insert((*hash).keys, hashKey);
-
+      conflict = list_insert(((*hash).keys + h1_position), hashKey);
       operationLog.indHash = h1_position;
       switch (conflict) {
         case 0:
@@ -108,7 +107,7 @@ HashMap_t *hash_initialize(ConflictMethods_t method){
       h->keys = malloc(sizeof(hashList*) * h->size);
       void *p = h->keys;
       for (size_t i = 0; i < h->size; i++) {
-        h->keys += i;
+        h->keys = ((hashList*) h->keys) + i;
         h->keys = (void *) list_create();
       }
       h->keys = p;
