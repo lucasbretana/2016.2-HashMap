@@ -91,7 +91,7 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
       break;
   }
   (*hash).hashConflicts += conflict;
-  // return conflict;
+  operationLog.localConflicts = conflict;
   return operationLog; //TODO arrumar retorno
 }
 
