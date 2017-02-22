@@ -99,11 +99,13 @@ int list_delete(hashList **listHead, char *info){
   target = list_get(head, info);
   if (target == NULL) {     //Element was not in the list.
     *listHead = head;
+    return -1;
   }
   next = (*target).next;
   prev = (*target).prev;
 
   if(target == head){
+    nConfl = 0;
     free((*target).data);
     (*target).data = NULL;        //Leave head empty.
     if ((*target).next != NULL) { //If the head is not the last element I can free it.

@@ -1,6 +1,9 @@
 #include <stdlib.h>
 #include "usefull.h"
 
+/**
+ * Counts the length of a function
+ */
 int length(const char *k){
   int len = 0;
   while(k[len] != '\0')
@@ -8,6 +11,11 @@ int length(const char *k){
   return len;
 }
 
+/**
+ * Compares the two strings s1 and s2.  It returns an integer less than,
+ * equal to, or greater than zero if s1 is found, respectively, to be less than,
+ * to match, or be greater than s2.
+ */
 int strcomp(const char *s1, const char *s2)
 {
   for ( ; *s1 == *s2; s1++, s2++)
