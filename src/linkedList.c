@@ -29,18 +29,18 @@ hashList* list_create(){
 int list_insert(hashList *head, char *value){
   hashList *node;
   hashList *last;
+  char *myValue;
 
   if(head == NULL){
-    fprintf(stderr, "Can't insert element in a empty list\n");
     return -1;
   }
   node = malloc(sizeof(hashList));
   if (node == NULL) {
-    fprintf(stderr, "Failed to insert element list\nmalloc returned NULL\n");
     return -1;
   }
   if((*head).data == NULL){ //If head is empty, write info in head;
-    (*head).data = value;
+    myValue = malloc(length(value) * sizeof(char));
+    (*head).data = myValue;
     return 0;
   }else{
     fprintf(stderr, "Head was not empty\n");
@@ -58,7 +58,8 @@ int list_insert(hashList *head, char *value){
       last = head;              //The head is the last element
     }
     //Now that we have the last element in the list
-    (*node).data = value;
+    myValue = malloc(length(value) * sizeof(char));
+    (*head).data = myValue;
     (*node).prev = last;
     (*node).next = NULL;
     (*last).next = node;

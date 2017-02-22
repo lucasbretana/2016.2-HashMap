@@ -8,22 +8,17 @@ int length(const char *k){
   return len;
 }
 
-int strcomp(const char *s1, const char *s2){
-  if((s1 == NULL) && (s2 == NULL)) return 0;
-  if(s1 == NULL) return length(s2) * -1;
-  if(s2 == NULL) return length(s1);
+int strcomp(const char *s1, const char *s2)
+{
+  for ( ; *s1 == *s2; s1++, s2++)
+    if (*s1 == '\0')
+	    return 0;
+  return ((*(unsigned char *)s1 < *(unsigned char *)s2) ? -1 : +1);
+}
 
-  int l1 = length(s1);
-  int l2 = length(s2);
-  if(l1 != l2)
-    return l1 - l2;
-
-  int i = 0;
-  while((s1[i] != '\0') && (s2[i] != '\0')){
-    if(s1[i] != s2[i]){
-      return s1[i] - s2[i];
-    }
-    i++;
-  }
-  return 0;
+char *strcopy(char *s1, const char *s2)
+{
+    char *s = s1;
+    while ((*s++ = *s2++) != 0);
+    return (s1);
 }
