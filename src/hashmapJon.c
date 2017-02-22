@@ -66,21 +66,38 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
         aux = (((char **)(*hash).keys) + ((h1_position + probing) % (*hash).size));
         conflict += 1;
       }
+
+      (*aux) = malloc(length(hashKey) * sizeof(char *));
+      strcopy(*aux, hashKey);
       conflict -= 1; //Because probing started testing position 0;
       probing  -= 1; //Because probing started testing position 0;
       operationLog.indHash = (h1_position + probing) % (*hash).size;
-
       break;
     case Quadratic:
-      aux = ((*hash).keys + (h1_position * sizeof(char *)));
+      aux = ((char **)(*hash).keys) + h1_position;
+      if((*aux) == NULL) {
+        (*aux) = malloc(length(hashKey) * sizeof(char *));
+        strcopy(*aux, hashKey);
+
+        operationLog.indHash = h1_position;
+        operationLog.success = TRUE;
+        break; //Leaves if that was no conflict
+      }
+      operationLog.success = TRUE;
       for (probing = 0; (*aux) != NULL; probing++) {
-        (*aux) = (*hash).keys + ((h1_position + (probing * probing)) % (*hash).size) * sizeof(char *);
-        conflict += 1;
         if (strcomp((*aux), hashKey) == 0) {
           operationLog.success = FALSE;
           break;
         }
+        aux = (((char **)(*hash).keys) + ((h1_position + probing * probing) % (*hash).size));
+        operationLog.indHash = ((h1_position + probing * probing) % (*hash).size);
+        conflict += 1;
       }
+      (*aux) = malloc(length(hashKey) * sizeof(char *));
+      strcopy(*aux, hashKey);
+      conflict -= 1; //Because probing started testing position 0;
+      // probing  -= 1; //Because probing started testing position 0;
+      // operationLog.indHash = (h1_position + probing * probing) % (*hash).size;
       (*aux) = hashKey;
       break;
     case Double_Hash:
