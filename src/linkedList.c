@@ -92,6 +92,7 @@ hashList* list_delete(hashList *head, char *info){
   prev = (*target).prev;
 
   if(target == head){
+    free((*target).data);
     (*target).data = NULL;  //Leave head empty.
     if ((*target).next != NULL) { //If the head is not the last element I can free it.
       free(target);

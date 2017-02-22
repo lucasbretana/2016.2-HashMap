@@ -18,9 +18,9 @@ void hash_insert(HashMap_t *hash, key_p hashKey){
       break;
     //All the next 'cases' need to run this test
     if(((char *)(*hash).keys + h1_position) == NULL) {
-      void *p = ((char *)(*hash).keys + h1_position);
-      p = hashKey;
-      p = NULL;
+      char **p;
+      p = ((*hash).keys + h1_position);
+      *p = hashKey;
       break; //Leaves if that was no conflict
     }
     aux = ((char *)(*hash).keys + h1_position); //Set it variable as it is the same in all 'cases'.
