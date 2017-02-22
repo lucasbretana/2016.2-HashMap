@@ -47,27 +47,15 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
       break;
     //All the next 'cases' need to run this test
     case Linear:
-      aux = (((char **)(*hash).keys) + (h1_position % (*hash).size));
+      aux = ((char **)(*hash).keys) + h1_position;
       if((*aux) == NULL) {
-        // aux = ((*hash).keys + h1_position * sizeof(char *));
         (*aux) = malloc(length(hashKey) * sizeof(char *));
         strcopy(*aux, hashKey);
 
         operationLog.indHash = h1_position;
         operationLog.success = TRUE;
-        aux = (((char **)(*hash).keys) + ((h1_position + 1) % (*hash).size));
-        // if ((*aux) == NULL) {
-        //   printf("PONTEIRO IGUAL A ZERO\n");
-        // }else{
-        //   printf("NOVO INDICE DO AUX:%i\nNOVO PONTEIRO DO AUX:%p\nNOVO VALOR:%s\n", ((h1_position + 1) % (*hash).size), aux, *(aux));
-        // }
         break; //Leaves if that was no conflict
       }
-      // if ((*aux) == NULL) {
-      //   printf("PONTEIRO IGUAL A ZERO\n");
-      // }else{
-      //   printf("134646541684NOVO INDICE DO AUX:%i\nNOVO PONTEIRO DO AUX:%p\nNOVO VALOR:%s\n", ((h1_position + 1) % (*hash).size), aux, *(aux));
-      // }
 
       operationLog.success = TRUE;
       for (probing = 0; (*aux) != NULL; probing++) {
@@ -77,8 +65,9 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
         }
         aux = (((char **)(*hash).keys) + ((h1_position + probing) % (*hash).size));
         conflict += 1;
-        // printf("NOVO INDICE DO AUX:%i\nNOVO PONTEIRO DO AUX:%p\nNOVO VALOR:%s\n", ((h1_position + probing) % (*hash).size), aux, *aux);
       }
+      conflict -= 1; //Because probing started testing position 0;
+      probing  -= 1; //Because probing started testing position 0;
       operationLog.indHash = (h1_position + probing) % (*hash).size;
 
       break;
