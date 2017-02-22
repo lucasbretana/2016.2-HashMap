@@ -30,17 +30,29 @@ typedef struct _HashMap_t{
                 unsigned long long int deleteTime;
                 unsigned long long int getTime;
 } HashMap_t;
+typedef enum _boolean_t{
+              true,
+              false = 0
+} Boolean_t;
+typedef struct _ReturnLog{
+                h_code_t code;
+                unsigned int indH1;
+                unsigned int indHash;
+                unsigned int numConflicts;
+                Boolean_t success;
+} ReturnLog;
 
 /*extern ConflictMethods_t METHOD;
 extern int HASH_SIZE;
 extern key **HashMap;*/
 
-void hash_delete(HashMap_t *, key_t *);
-// void hash_insert(HashMap_t *, key_t *);
-// void hash_get(HashMap_t *, key_t *);
 h_code_t h0(void *, int);
 position_t h1(key_p, bulk_t);
 position_t h2(key_p, bulk_t);
 position_t position(key_p);
+
+ReturnLog hash_delete(HashMap_t *, key_t *);
+// void hash_insert(HashMap_t *, key_t *);
+// void hash_get(HashMap_t *, key_t *);
 
 #endif

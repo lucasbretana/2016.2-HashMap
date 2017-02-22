@@ -35,54 +35,38 @@ position_t position(key_p k){
  * If it is Chaining, then to remove it must find in the list
  * If is is Linear then is start to look in the hash list, stop when you foun it, work it is not in the list
  */
-void hash_delete(HashMap_t *hash, key_p hashKey){
+ReturnLog hash_delete(HashMap_t *hash, key_p hashKey){
   position_t startPoint = 0;
+  int conflict = 0;
   switch(hash->method){
     case Chaining:
+      startPoint = h1(hashKey, length(hashKey));
+      list_delete((((hashList *)hash->keys) + startPoint), hashKey);
       break;
+    case Double_Hash:
+    case Quadratic:
     case Linear:
       startPoint = h1(hashKey, length(hashKey));
       position_t current = startPoint;
       if(strcomp(((key_p)hash->keys) + startPoint, hashKey) != 0){
-        // You lucky bastard. Found on first try
+        // You lucky bastard. Found it on first try
         key_p *deletedEntry = ((key_p *)hash->keys) + startPoint;
         free(*(((key_p *)hash->keys) + startPoint));
         *deletedEntry = NULL;
       }else{
         // Haha gonna have to look all over the hash
         do{
-          // You lucky bastard. Found on first try
-          key_p *deletedEntry = ((key_p *)hash->keys) + startPoint;
-          free(*(((key_p *)hash->keys) + startPoint));
+          current = (current + sizeof(char *)) % hash->size;
+          conflict++;
+          key_p *deletedEntry = ((key_p *)hash->keys) + current;
+          free(*(((key_p *)hash->keys) + current));
           *deletedEntry = NULL;
-        }while((strcomp(((key_p)hash->keys) + current, hashKey) != 0) && (strcomp(((key_p)hash->keys) + current, ((key_p)hash->keys) + startPoint) == 0));
+        }while((strcomp(((key_p)hash->keys) + current, hashKey) != 0) && (current != startPoint));
       }
-      break;
-    case Quadratic:
-      break;
-    case Double_Hash:
       break;
     default:
       fprintf(stderr, "There was something wrong! The conflict methodis not valid!\n");
       break;
     }
+    return conflict;
 }
-
-// HashMap_t *hash_initialize(ConflictMethods_t method){
-//     HashMap_t *h = malloc(sizeof(HashMap_t));
-//     h->size = INITIAL_SIZE;
-//     h->method = method;
-//     if(method == Chaining){
-//       h->keys = malloc(sizeof(hashList*) * h->size);
-//       void *p = h->keys;
-//       for (bulk_t i = 0; i < h->size; i++) {
-//         h->keys += i;
-//         h->keys = (void *) list_create();
-//       }
-//       h->keys = p;
-//     }
-//     else{
-//       h->keys = malloc(sizeof(key_p) * h->size);
-//     }
-//     return h;
-// }
