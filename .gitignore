@@ -43,3 +43,4 @@ test.c
 # Fucking crap files
 .fuse*
 .*~
+*.old
