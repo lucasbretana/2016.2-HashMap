@@ -35,7 +35,7 @@ position_t position(key_p k){
  * If it is Chaining, then to remove it must find in the list
  * If is is Linear then is start to look in the hash list, stop when you foun it, work it is not in the list
  */
-ReturnLog hash_delete(HashMap_t *hash, key_p hashKey){
+ReturnLog_t hash_delete(HashMap_t *hash, key_p hashKey){
   position_t startPoint = 0;
   int conflict = 0;
   switch(hash->method){
@@ -68,5 +68,6 @@ ReturnLog hash_delete(HashMap_t *hash, key_p hashKey){
       fprintf(stderr, "There was something wrong! The conflict methodis not valid!\n");
       break;
     }
-    return conflict;
+    ReturnLog_t log;
+    return log;
 }
