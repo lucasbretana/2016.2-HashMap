@@ -57,7 +57,7 @@ ReturnLog_t hash_delete(HashMap_t *hash, key_p hashKey){
     case Double_Hash:
     case Quadratic:
     case Linear:
-      log.indH1 = h1(hashKey, length(hashKey), &code);
+      log.indH1 = h1(hashKey, length(hashKey), &code); // deslocation
       log.indHash = log.indH1;
       log.code = code;
       log.localConflicts = 0;
@@ -71,7 +71,7 @@ ReturnLog_t hash_delete(HashMap_t *hash, key_p hashKey){
       }else{
         // Haha gonna have to look all over the hash
         do{
-          log.indHash = (log.indHash + sizeof(char *)) % hash->size;
+          log.indHash = (log.indHash + sizeof(key_t *)) % hash->size;
           log.localConflicts++;
           if(strcomp(((key_p)hash->keys) + log.indHash, hashKey) == 0){
             key_p *deletedEntry = ((key_p *)hash->keys) + log.indHash;

@@ -14,7 +14,7 @@ typedef long long int h_code_t;
 typedef unsigned int bulk_t;
 typedef unsigned int position_t;
 typedef char key_t;
-typedef key_t *key_p;
+typedef char *key_p;
 typedef enum _ConflictMethods_t{
                 Chaining = 1,
                 Linear = 2,
@@ -38,7 +38,7 @@ typedef struct _ReturnLog{
                 unsigned int indH1;
                 unsigned int indHash;
                 h_code_t code;
-                unsigned int localConflicts;
+                int localConflicts;
                 Boolean_t success;
 } ReturnLog_t;
 
