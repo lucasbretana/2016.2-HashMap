@@ -7,22 +7,44 @@
 #include "linkedList.h"
 
 ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
-  position_t h1_position = h1(hashKey, (*hash).size);
+  h_code_t hcode;
+  position_t h1_position;
   position_t h2_position;
   ReturnLog_t operationLog;
+  h1_position = h1(hashKey, (*hash).size, &hcode);
 
+  operationLog.code = hcode;
   operationLog.indH1 = h1_position;
   int conflict = 0;
-  int probing = 0;
+  size_t probing = 0;
   char *aux;
   switch ((*hash).method) {
     case Chaining:
       conflict = list_insert((*hash).keys, hashKey);
 
-      if (conflict < 0) operationLog.success = FALSE;
-      else operationLog.success = TRUE;
-
-      operationLog.localConflicts = conflict;
+      operationLog.indHash = h1_position;
+      switch (conflict) {
+        case 0:
+          operationLog.localConflicts = 0;
+          operationLog.success = TRUE;
+          break;
+        case 1:
+          operationLog.localConflicts = 0;
+          operationLog.success = FALSE;
+          break;
+        case 2:
+          operationLog.localConflicts = 1;
+          operationLog.success = FALSE;
+          break;
+        case 3:
+          operationLog.localConflicts = 1;
+          operationLog.success = TRUE;
+          break;
+        default:
+          operationLog.localConflicts = -1;
+          operationLog.success = FALSE;
+          break;
+      }
       break;
     //All the next 'cases' need to run this test
     if(((char *)(*hash).keys + h1_position) == NULL) {
@@ -30,40 +52,40 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
       p = ((*hash).keys + h1_position);
       *p = hashKey;
 
+      operationLog.indHash = h1_position;
       operationLog.success = TRUE;
       break; //Leaves if that was no conflict
     }
-    aux = ((char *)(*hash).keys + h1_position); //Set it variable as it is the same in all 'cases'.
     case Linear:
-      // aux = ((char *)(*hash).keys + h1_position);
       for (probing = h1_position; aux != NULL; probing++) {
-        if(probing >= (*hash).size){ //Reached the end of the hash, go back to the top.
-          aux = (*hash).keys;
-        }else{
-          aux += 1;
-        }
+        aux = (*hash).keys + ((h1_position + probing) % (*hash).size);
         conflict += 1;
+        if (strcomp(aux, hashKey) == 0) {
+          operationLog.success = FALSE;
+          break;
+        }
       }
       aux = hashKey;
       break;
     case Quadratic:
-      // aux = ((char *)(*hash).keys + h1_position);
-      for (size_t i = 0, probing = h1_position; aux != NULL; i++, probing++) {
-        if(probing >= (*hash).size){ //Reached the end of the hash, go back to the top.
-          aux = (*hash).keys;
-        }else{
-          aux += (i*i);
-          //aux = (h1_position + c1 * i + c2 + i*i) % size;
-        }
+      for (probing = 0; aux != NULL; probing++) {
+        aux = (*hash).keys + ((h1_position + (probing * probing)) % (*hash).size);
         conflict += 1;
+        if (strcomp(aux, hashKey) == 0) {
+          operationLog.success = FALSE;
+          break;
+        }
       }
       aux = hashKey;
       break;
-    case Double_Hash:
-      // aux = ((char *)(*hash).keys + h1_position);
+      case Double_Hash:
       h2_position = h2(hashKey, (*hash).size);
-      for (size_t i = 0; aux != NULL; i++) {
-        aux = (*hash).keys + ((h1_position + (i * h2_position)) % (*hash).size);
+      for (probing = 0; aux != NULL; probing++) {
+        aux = (*hash).keys + ((h1_position + (probing * h2_position)) % (*hash).size);
+      }
+      if (strcomp(aux, hashKey) == 0) {
+        operationLog.success = FALSE;
+        break;
       }
       aux = hashKey;
       break;

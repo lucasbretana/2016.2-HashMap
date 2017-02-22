@@ -44,8 +44,10 @@ int list_insert(hashList *head, char *value){
     return 0;
   }else{
     if ((*head).next != NULL) { //If head isn't the last element then
+      if (strcomp((*head).data,value) == 0) return 1; //Value already in the head
       do{                       //Go to the last element
         last = (*head).next;
+        if (strcomp((*last).data,value) == 0) return 2; //Value already inside the list
       }while((*last).next != NULL);
     }else{                      //Else
       last = head;              //The head is the last element
@@ -59,7 +61,6 @@ int list_insert(hashList *head, char *value){
   }
 
 }
-
 
 /**
  * Look for 'info' inside the list.
