@@ -40,30 +40,33 @@ int list_insert(hashList *head, char *value){
   }
   if((*head).data == NULL){ //If head is empty, write info in head;
     myValue = malloc(length(value) * sizeof(char));
+    strcopy(myValue, value);
     (*head).data = myValue;
     return 0;
   }else{
-    fprintf(stderr, "Head was not empty\n");
     if ((*head).next != NULL) { //If head isn't the last element then
       last = head;
       do{                       //Go to the last element
         last = (*last).next;
         if (strcomp((*last).data,value) == 0){
-          fprintf(stderr, "STINGS: S1:%s, S2:%s",(*last).data,value);
           return 2; //Value already inside the list, abort
         }
       }while((*last).next != NULL);
     }else{                      //So head IS the last element
-      if (strcomp((*head).data,value) == 0) return 1; //Value already in the head, abort
+      if (strcomp((*head).data,value) == 0){
+        return 1; //Value already in the head, abort
+      }
       last = head;              //The head is the last element
     }
     //Now that we have the last element in the list
     myValue = malloc(length(value) * sizeof(char));
+    strcopy(myValue, value);
     (*head).data = myValue;
     (*node).prev = last;
     (*node).next = NULL;
     (*last).next = node;
     //Now the new node is the new last elemnet.
+    //fprintf(stderr, "Returning 3\n");
     return 3;
   }
 
