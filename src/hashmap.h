@@ -35,9 +35,9 @@ typedef enum _boolean_t{
               FALSE = 0
 } Boolean_t;
 typedef struct _ReturnLog{
-                h_code_t code;
                 unsigned int indH1;
                 unsigned int indHash;
+                h_code_t code;
                 unsigned int localConflicts;
                 Boolean_t success;
 } ReturnLog_t;
@@ -47,7 +47,7 @@ extern int HASH_SIZE;
 extern key **HashMap;*/
 
 h_code_t h0(void *, int);
-position_t h1(key_p, bulk_t);
+position_t h1(key_p, bulk_t, h_code_t *);
 position_t h2(key_p, bulk_t);
 position_t position(key_p);
 

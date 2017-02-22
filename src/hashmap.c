@@ -18,8 +18,9 @@ h_code_t h0(void *k, int len){
   return hash;
 }
 
-position_t h1(key_p k, bulk_t size){
-  return h0(k, length(k) % size);
+position_t h1(key_p k, bulk_t size, h_code_t *code){
+  *code = h0(k, length(k));
+  return (*code) % size;
 }
 
 position_t h2(key_p k, bulk_t size){
@@ -36,39 +37,52 @@ position_t position(key_p k){
  * If is is Linear then is start to look in the hash list, stop when you foun it, work it is not in the list
  */
 ReturnLog_t hash_delete(HashMap_t *hash, key_p hashKey){
-  position_t startPoint = 0;
   ReturnLog_t log;
-  log.code = 10L;
-  log.indH1 = 1;
-  log.indHash = 1;
-  log.localConflicts = 0;
-  log.success = TRUE;
-  if(1==1) return log;
-  int conflict = 0;
+  hashList *list;
+  h_code_t code;
+
   switch(hash->method){
     case Chaining:
-      startPoint = h1(hashKey, length(hashKey));
-      list_delete((((hashList *)hash->keys) + startPoint), hashKey);
+      log.indH1 = h1(hashKey, length(hashKey), &code);
+      log.indHash = log.indH1;
+      log.code = code;
+      list = ((hashList *)hash->keys) + log.indH1;
+      log.localConflicts = list_delete(&list, hashKey);
+      log.success = TRUE;
+      if(log.localConflicts == -1){
+        log.localConflicts = 0;
+        log.success = FALSE;
+      }
       break;
     case Double_Hash:
     case Quadratic:
     case Linear:
-      startPoint = h1(hashKey, length(hashKey));
-      position_t current = startPoint;
-      if(strcomp(((key_p)hash->keys) + startPoint, hashKey) != 0){
+      log.indH1 = h1(hashKey, length(hashKey), &code);
+      log.indHash = log.indH1;
+      log.code = code;
+      log.localConflicts = 0;
+      if(strcomp(((key_p)hash->keys) + log.indH1, hashKey) != 0){
         // You lucky bastard. Found it on first try
-        key_p *deletedEntry = ((key_p *)hash->keys) + startPoint;
-        free(*(((key_p *)hash->keys) + startPoint));
+        key_p *deletedEntry = ((key_p *)hash->keys) + log.indH1;
+        free(*(((key_p *)hash->keys) + log.indH1));
         *deletedEntry = NULL;
+
+        log.success = TRUE;
       }else{
         // Haha gonna have to look all over the hash
         do{
-          current = (current + sizeof(char *)) % hash->size;
-          conflict++;
-          key_p *deletedEntry = ((key_p *)hash->keys) + current;
-          free(*(((key_p *)hash->keys) + current));
-          *deletedEntry = NULL;
-        }while((strcomp(((key_p)hash->keys) + current, hashKey) != 0) && (current != startPoint));
+          log.indHash = (log.indHash + sizeof(char *)) % hash->size;
+          log.localConflicts++;
+          if(strcomp(((key_p)hash->keys) + log.indHash, hashKey) == 0){
+            key_p *deletedEntry = ((key_p *)hash->keys) + log.indHash;
+            free(*(((key_p *)hash->keys) + log.indHash));
+            *deletedEntry = NULL;
+            // Gotta lucky this time, didn't have to go all the way throw
+            break;
+          }
+        }while(log.indHash != log.indH1);
+        if(log.indHash == log.indH1)
+          log.success = FALSE;
       }
       break;
     default:
