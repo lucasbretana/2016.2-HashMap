@@ -24,22 +24,27 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
       operationLog.indHash = h1_position;
       switch (conflict) {
         case 0:
+          conflict = 0;
           operationLog.localConflicts = 0;
           operationLog.success = TRUE;
           break;
         case 1:
+          conflict = 0;
           operationLog.localConflicts = 0;
           operationLog.success = FALSE;
           break;
         case 2:
+          conflict = 1;
           operationLog.localConflicts = 1;
           operationLog.success = FALSE;
           break;
         case 3:
+          conflict = 1;
           operationLog.localConflicts = 1;
           operationLog.success = TRUE;
           break;
         default:
+          conflict = -1;
           operationLog.localConflicts = -1;
           operationLog.success = FALSE;
           break;
