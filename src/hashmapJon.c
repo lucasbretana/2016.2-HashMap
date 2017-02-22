@@ -20,7 +20,7 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
   char *aux;
   switch ((*hash).method) {
     case Chaining:
-      conflict = list_insert(((*hash).keys + h1_position), hashKey);
+      conflict = list_insert(((*hash).keys + h1_position * sizeof(hashList *)), hashKey);
       operationLog.indHash = h1_position;
       switch (conflict) {
         case 0:
@@ -46,9 +46,9 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
       }
       break;
     //All the next 'cases' need to run this test
-    if(((char *)(*hash).keys + h1_position) == NULL) {
+    if(((*hash).keys + h1_position * sizeof(char *)) == NULL) {
       char **p;
-      p = ((*hash).keys + h1_position);
+      p = ((*hash).keys + h1_position * sizeof(char *));
       *p = hashKey;
 
       operationLog.indHash = h1_position;
@@ -57,7 +57,7 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
     }
     case Linear:
       for (probing = h1_position; aux != NULL; probing++) {
-        aux = (*hash).keys + ((h1_position + probing) % (*hash).size);
+        aux = (*hash).keys + ((h1_position + probing) % (*hash).size) * sizeof(char *);
         conflict += 1;
         if (strcomp(aux, hashKey) == 0) {
           operationLog.success = FALSE;
@@ -68,7 +68,7 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
       break;
     case Quadratic:
       for (probing = 0; aux != NULL; probing++) {
-        aux = (*hash).keys + ((h1_position + (probing * probing)) % (*hash).size);
+        aux = (*hash).keys + ((h1_position + (probing * probing)) % (*hash).size) * sizeof(char *);
         conflict += 1;
         if (strcomp(aux, hashKey) == 0) {
           operationLog.success = FALSE;
@@ -77,10 +77,10 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
       }
       aux = hashKey;
       break;
-      case Double_Hash:
+    case Double_Hash:
       h2_position = h2(hashKey, (*hash).size);
       for (probing = 0; aux != NULL; probing++) {
-        aux = (*hash).keys + ((h1_position + (probing * h2_position)) % (*hash).size);
+        aux = (*hash).keys + ((h1_position + (probing * h2_position)) % (*hash).size) * sizeof(char *);
       }
       if (strcomp(aux, hashKey) == 0) {
         operationLog.success = FALSE;
