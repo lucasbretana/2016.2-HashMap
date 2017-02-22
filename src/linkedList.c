@@ -44,8 +44,10 @@ int list_insert(hashList *head, char *value){
     return 0;
   }else{
     if ((*head).next != NULL) { //If head isn't the last element then
+      if (strcomp((*head).data,value) == 0) return -2; //Value in the head
       do{                       //Go to the last element
         last = (*head).next;
+        if (strcomp((*last).data,value) == 0) return -3; //Value already inside the list
       }while((*last).next != NULL);
     }else{                      //Else
       last = head;              //The head is the last element
@@ -55,7 +57,7 @@ int list_insert(hashList *head, char *value){
     (*node).next = NULL;
     (*last).next = node;
     //Now the new node is the new last elemnet.
-    return 1;
+    return 1; //Successfully written to the list
   }
 
 }

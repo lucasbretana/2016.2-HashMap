@@ -6,21 +6,31 @@
 #include "usefull.h"
 #include "linkedList.h"
 
-int hash_insert(HashMap_t *hash, key_p hashKey){
+ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
   position_t h1_position = h1(hashKey, (*hash).size);
   position_t h2_position;
-  (*hash).numConflicts = 0;
+  ReturnLog_t operationLog;
+
+  operationLog.indH1 = h1_position;
+  int conflict = 0;
   int probing = 0;
   char *aux;
   switch ((*hash).method) {
     case Chaining:
-      (*hash).numConflicts += list_insert((*hash).keys, hashKey);
+      conflict = list_insert((*hash).keys, hashKey);
+
+      if (conflict < 0) operationLog.success = false;
+      else operationLog.success = true;
+
+      operationLog.localConflicts = conflict;
       break;
     //All the next 'cases' need to run this test
     if(((char *)(*hash).keys + h1_position) == NULL) {
       char **p;
       p = ((*hash).keys + h1_position);
       *p = hashKey;
+
+      operationLog.success = true;
       break; //Leaves if that was no conflict
     }
     aux = ((char *)(*hash).keys + h1_position); //Set it variable as it is the same in all 'cases'.
@@ -32,7 +42,7 @@ int hash_insert(HashMap_t *hash, key_p hashKey){
         }else{
           aux += 1;
         }
-        (*hash).numConflicts += 1;
+        conflict += 1;
       }
       aux = hashKey;
       break;
@@ -45,6 +55,7 @@ int hash_insert(HashMap_t *hash, key_p hashKey){
           aux += (i*i);
           //aux = (h1_position + c1 * i + c2 + i*i) % size;
         }
+        conflict += 1;
       }
       aux = hashKey;
       break;
@@ -57,10 +68,12 @@ int hash_insert(HashMap_t *hash, key_p hashKey){
       aux = hashKey;
       break;
   }
-  return (*hash).numConflicts;
+  (*hash).hashConflicts += conflict;
+  // return conflict;
+  return operationLog; //TODO arrumar retorno
 }
 
-void hash_get(HashMap_t *hash, key_p hashKey){
+ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
 
 }
 
@@ -68,6 +81,7 @@ HashMap_t *hash_initialize(ConflictMethods_t method){
     HashMap_t *h = malloc(sizeof(HashMap_t));
     h->size = INITIAL_SIZE;
     h->method = method;
+    h->hashConflicts = 0;
     if(method == Chaining){
       h->keys = malloc(sizeof(hashList*) * h->size);
       void *p = h->keys;
