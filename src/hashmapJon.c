@@ -19,8 +19,8 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
     case Chaining:
       conflict = list_insert((*hash).keys, hashKey);
 
-      if (conflict < 0) operationLog.success = false;
-      else operationLog.success = true;
+      if (conflict < 0) operationLog.success = FALSE;
+      else operationLog.success = TRUE;
 
       operationLog.localConflicts = conflict;
       break;
@@ -30,7 +30,7 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
       p = ((*hash).keys + h1_position);
       *p = hashKey;
 
-      operationLog.success = true;
+      operationLog.success = TRUE;
       break; //Leaves if that was no conflict
     }
     aux = ((char *)(*hash).keys + h1_position); //Set it variable as it is the same in all 'cases'.
