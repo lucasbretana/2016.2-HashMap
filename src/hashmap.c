@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "hashmap.h"
+#include "hashmapJon.h"
 #include "usefull.h"
 #include "linkedList.h"
 /*
@@ -195,13 +196,32 @@ ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
   return log;
 }
 
-ReturnLog_t rehash(HashMap_t *hash){
+HashMap_t *rehash(HashMap_t *hash){
   ReturnLog_t log;
-  switch (hash->method) {
-    case Linear:
-    break;
-    default:
-    break;
+  HashMap_t *newHash = hash_initialize(hash->method, hash->size * 2);
+  // int indOldHash = 0, indNewHash = 0;
+
+  if(hash->method != Chaining){
+    for(unsigned i = 0; i <hash->size ; i++){
+      char *string;
+      string = *(((key_p *)hash->keys) + i);
+      if(string != NULL)
+        hash_insert(newHash, string);
+    }
+  }else{
+    for(unsigned i = 0; i <hash->size ; i++){
+      hashList *seeker = *(((hashList**)hash->keys) + i);
+      hashList *toFree = seeker;
+      do{
+        // if(seeker->data != NULL){
+        // }
+        hash_insert(newHash, seeker->data);
+        seeker = seeker->next;
+        free(toFree->data);
+        free(toFree);
+        toFree = seeker;
+      }while(seeker->next != NULL);;
+    }
   }
-  return log;
+  return newHash;
 }

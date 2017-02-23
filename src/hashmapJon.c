@@ -151,6 +151,7 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
   (*hash).hashConflicts += conflict;
   operationLog.localConflicts = conflict;
   if(operationLog.success == TRUE) hash->nEntrys++;
+  fprintf(stderr, "ALPHA %f\nLOAD FACTOR %f\n", ALPHA, ((hash->nEntrys * 100.0) / ((float)hash->size)));
   if(((hash->nEntrys * 100.0) / ((float)hash->size)) > ALPHA) rehash(hash);
   return operationLog;
 }
