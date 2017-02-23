@@ -74,6 +74,7 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
       break;
     case Quadratic:
       aux = ((char **)(*hash).keys) + h1_position;
+      h2_position = h2(hashKey, (*hash).size);
       if((*aux) == NULL) {
         (*aux) = malloc(length(hashKey) * sizeof(char *));
         strcopy(*aux, hashKey);
@@ -82,22 +83,32 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
         operationLog.success = TRUE;
         break; //Leaves if that was no conflict
       }
+
       operationLog.success = TRUE;
-      for (probing = 0; (*aux) != NULL; probing++) {
+      for (probing = 1, conflict = 1; (*aux) != NULL; probing++, conflict++) {
+        // printf("S1:%s\nS2:%s\nProbing:%i\n",(*aux),hashKey,probing);
         if (strcomp((*aux), hashKey) == 0) {
           operationLog.success = FALSE;
+          probing++;
+          conflict++;
           break;
         }
-        aux = (((char **)(*hash).keys) + ((h1_position + probing * probing) % (*hash).size));
-        operationLog.indHash = ((h1_position + probing * probing) % (*hash).size);
-        conflict += 1;
+        aux = ((char **)(*hash).keys) + ((h1_position + probing + probing * probing) % (*hash).size);
+        if (((h1_position + probing + probing * probing) % (*hash).size) == h1_position){ // If position has returned to h1, we can't write data in the hash
+          operationLog.success = FALSE;
+          probing = -666;
+          break;
+        }
       }
-      (*aux) = malloc(length(hashKey) * sizeof(char *));
-      strcopy(*aux, hashKey);
-      conflict -= 1; //Because probing started testing position 0;
-      // probing  -= 1; //Because probing started testing position 0;
-      // operationLog.indHash = (h1_position + probing * probing) % (*hash).size;
-      (*aux) = hashKey;
+      if (probing < 0) {
+        operationLog.indHash = -666;
+      }else{
+        (*aux) = malloc(length(hashKey) * sizeof(char *));
+        strcopy(*aux, hashKey);
+        conflict -= 1;
+        probing  -= 1;
+        operationLog.indHash = (h1_position + probing + probing * probing) % (*hash).size;
+      }
       break;
     case Double_Hash:
       aux = ((char **)(*hash).keys) + h1_position;
@@ -135,8 +146,8 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
         conflict -= 1;
         probing  -= 1;
         operationLog.indHash = (h1_position + (probing * h2_position)) % (*hash).size;
-        break;
       }
+      break;
   }
   (*hash).hashConflicts += conflict;
   operationLog.localConflicts = conflict;
