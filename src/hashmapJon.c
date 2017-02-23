@@ -20,9 +20,8 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
   char **aux;
   switch ((*hash).method) {
     case Chaining:
-      conflict = list_insert(((*hash).keys + h1_position * sizeof(hashList *)), hashKey);
       operationLog.indHash = h1_position;
-      switch (conflict) {
+      switch (list_insert(*(((hashList **)(*hash).keys) + h1_position), hashKey)) {
         case 0:
           conflict = 0;
           operationLog.success = TRUE;
@@ -39,7 +38,11 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
           conflict = 1;
           operationLog.success = TRUE;
           break;
+        case -1:
+          fprintf(stderr, "RECEBENDO -1 POR ALGUMA CARALHA DE MOTIVO\n");
+          break;
         default:
+          fprintf(stderr, "DEU MERDA\n");
           conflict = -1;
           operationLog.success = FALSE;
           break;
@@ -115,7 +118,7 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
   }
   (*hash).hashConflicts += conflict;
   operationLog.localConflicts = conflict;
-  return operationLog; //TODO arrumar retorno
+  return operationLog;
 }
 
 ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
@@ -129,13 +132,12 @@ HashMap_t *hash_initialize(ConflictMethods_t method){
     h->method = method;
     h->hashConflicts = 0;
     if(method == Chaining){
-      h->keys = malloc(sizeof(hashList*) * h->size);
-      void *p = h->keys;
+      h->keys = malloc(sizeof(hashList**) * h->size);
+      //void *p = h->keys;
       for (size_t i = 0; i < h->size; i++) {
-        h->keys = h->keys + i * sizeof(hashList *);
-        h->keys = list_create();
+        *(((hashList **) h->keys) + i) = list_create();
       }
-      h->keys = p;
+      //h->keys = p;
     }else{
       h->keys = malloc(sizeof(char **) * h->size); //Vector of pointers
       for (size_t i = 0; i < h->size; i++) {
