@@ -38,11 +38,7 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
           conflict = 1;
           operationLog.success = TRUE;
           break;
-        case -1:
-          fprintf(stderr, "RECEBENDO -1 POR ALGUMA CARALHA DE MOTIVO\n");
-          break;
         default:
-          fprintf(stderr, "DEU MERDA\n");
           conflict = -1;
           operationLog.success = FALSE;
           break;

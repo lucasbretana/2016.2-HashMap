@@ -61,7 +61,7 @@ int list_insert(hashList *head, char *value){
     //Now that we have the last element in the list
     myValue = malloc(length(value) * sizeof(char));
     strcopy(myValue, value);
-    (*head).data = myValue;
+    (*node).data = myValue;
     (*node).prev = last;
     (*node).next = NULL;
     (*last).next = node;
