@@ -152,9 +152,9 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
   (*hash).hashConflicts += conflict;
   operationLog.localConflicts = conflict;
   if(operationLog.success == TRUE) hash->nEntrys++;
-  fprintf(stderr, "LOAD FACTOR %f\n", ((hash->nEntrys * 1.0) / ((float)hash->size)));
-  fprintf(stderr, "Entrys %f\nhash->size %f\n\n\n", (hash->nEntrys * 1.0), ((float)hash->size));
-  if(((hash->nEntrys * 1.0) / ((float)hash->size)) > ALPHA) hash = rehash(hash);
+  // fprintf(stderr, "LOAD FACTOR %f\n", ((hash->nEntrys * 1.0) / ((float)hash->size)));
+  // fprintf(stderr, "Entrys %f\nhash->size %f\n\n\n", (hash->nEntrys * 1.0), ((float)hash->size));
+  if(((hash->nEntrys * 1.0) / ((float)hash->size)) > ALPHA) (*hash) = rehash(hash);
   return operationLog;
 }
 
