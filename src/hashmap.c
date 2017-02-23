@@ -199,6 +199,9 @@ ReturnLog_t rehash(HashMap_t *hash){
   ReturnLog_t log;
   switch (hash->method) {
     case Linear:
+    break;
+    default:
+    break;
   }
   return log;
 }
