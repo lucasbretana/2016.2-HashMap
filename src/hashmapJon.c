@@ -121,10 +121,10 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
   return operationLog;
 }
 
-ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
-  ReturnLog_t a;
-  return a;
-}
+// ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
+//   ReturnLog_t a;
+//   return a;
+// }
 
 HashMap_t *hash_initialize(ConflictMethods_t method){
     HashMap_t *h = malloc(sizeof(HashMap_t));
