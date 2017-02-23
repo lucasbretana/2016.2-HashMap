@@ -6,7 +6,6 @@
  */
 int length(const char *k){
   int len = 0;
-  if(k == NULL) return 0;
   while(k[len] != '\0')
       len ++;
   return len;
