@@ -205,8 +205,10 @@ HashMap_t *rehash(HashMap_t *hash){
     for(unsigned i = 0; i <hash->size ; i++){
       char *string;
       string = *(((key_p *)hash->keys) + i);
-      if(string != NULL)
+      if(string != NULL){
         hash_insert(&newHash, string);
+        free(string);
+      }
     }
   }else{
     hashList *seeker;
@@ -221,10 +223,14 @@ HashMap_t *rehash(HashMap_t *hash){
         }
         if(seeker->next != NULL){
           free(seeker);
+          free(seeker->next);
+          free(seeker->prev);
           seeker = NULL;
         }else{
           seeker = seeker->next;
           free(toFree);
+          free(toFree->next);
+          free(toFree->prev);
         }
         toFree = seeker;
       }while(seeker != NULL);
