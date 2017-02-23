@@ -16,7 +16,7 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
   operationLog.code = hcode;
   operationLog.indH1 = h1_position;
   int conflict = 0;
-  size_t probing = 0;
+  int probing = 0;
   char **aux;
   switch ((*hash).method) {
     case Chaining:
@@ -58,12 +58,12 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
 
       operationLog.success = TRUE;
       for (probing = 0; (*aux) != NULL; probing++) {
+        conflict += 1;
         if (strcomp((*aux), hashKey) == 0) {
           operationLog.success = FALSE;
           break;
         }
         aux = (((char **)(*hash).keys) + ((h1_position + probing) % (*hash).size));
-        conflict += 1;
       }
 
       (*aux) = malloc(length(hashKey) * sizeof(char *));
@@ -100,17 +100,43 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
       (*aux) = hashKey;
       break;
     case Double_Hash:
-      aux = ((*hash).keys + (h1_position * sizeof(char *)));
+      aux = ((char **)(*hash).keys) + h1_position;
       h2_position = h2(hashKey, (*hash).size);
-      for (probing = 0; (*aux) != NULL; probing++) {
-        (*aux) = (*hash).keys + ((h1_position + (probing * h2_position)) % (*hash).size) * sizeof(char *);
+      if((*aux) == NULL) {
+        (*aux) = malloc(length(hashKey) * sizeof(char *));
+        strcopy(*aux, hashKey);
+
+        operationLog.indHash = h1_position;
+        operationLog.success = TRUE;
+        break; //Leaves if that was no conflict
       }
-      if (strcomp((*aux), hashKey) == 0) {
-        operationLog.success = FALSE;
+
+      operationLog.success = TRUE;
+      for (probing = 1, conflict = 1; (*aux) != NULL; probing++, conflict++) {
+        // printf("S1:%s\nS2:%s\nProbing:%i\n",(*aux),hashKey,probing);
+        if (strcomp((*aux), hashKey) == 0) {
+          operationLog.success = FALSE;
+          probing++;
+          conflict++;
+          break;
+        }
+        aux = ((char **)(*hash).keys) + ((h1_position + (probing * h2_position)) % (*hash).size);
+        if (((h1_position + (probing * h2_position)) % (*hash).size) == h1_position){ // If position has returned to h1, we can't write data in the hash
+          operationLog.success = FALSE;
+          probing = -666;
+          break;
+        }
+      }
+      if (probing < 0) {
+        operationLog.indHash = -666;
+      }else{
+        (*aux) = malloc(length(hashKey) * sizeof(char *));
+        strcopy(*aux, hashKey);
+        conflict -= 1;
+        probing  -= 1;
+        operationLog.indHash = (h1_position + (probing * h2_position)) % (*hash).size;
         break;
       }
-      (*aux) = hashKey;
-      break;
   }
   (*hash).hashConflicts += conflict;
   operationLog.localConflicts = conflict;

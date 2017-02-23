@@ -49,16 +49,19 @@ int main(int argc, char **argv) {
   key_t *in = malloc(sizeof(key_p) * KEY_MAX_SIZE);
 
 ReturnLog_t log;
-  while(scanf("%s %s", op, in) == 2) {
+  while(scanf("%s %[^\n]s", op, in) == 2) {
     if(strcomp(op, DELETE) == 0){
       log = hash_delete(Hash, in);
-      printf("%s %s %lld %u %u %d %s\n", DELETE, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
+      printf("%s %s %lld %u %i %u %s\n", DELETE, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
     }else if(strcomp(op, INSERT) == 0){
       log = hash_insert(Hash, in);
-      printf("%s %s %lld %u %u %d %s\n", INSERT, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
+      if (log.indHash < 0)
+        printf("%s %s %lld %u %u %s\n", INSERT, in, log.code, log.indH1, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
+      else
+        printf("%s %s %lld %u %i %u %s\n", INSERT, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
     }else if(strcomp(op, GET) == 0){
       log = hash_get(Hash, in);
-      printf("%s %s %lld %u %u %d %s\n", GET, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
+      printf("%s %s %lld %u %i %u %s\n", GET, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
     }else
       fprintf(stderr, "Invalid operation (%s).", op);
   }

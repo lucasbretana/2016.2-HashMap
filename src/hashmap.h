@@ -36,9 +36,9 @@ typedef enum _boolean_t{
 } Boolean_t;
 typedef struct _ReturnLog{
                 unsigned int indH1;
-                unsigned int indHash;
+                unsigned int localConflicts;
+                int indHash;
                 h_code_t code;
-                int localConflicts;
                 Boolean_t success;
 } ReturnLog_t;
 
