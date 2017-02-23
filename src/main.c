@@ -32,13 +32,13 @@ int main(int argc, char **argv) {
     return SUCCESS;
   }
   else if(strcomp(argv[1], CHAINING) == 0)
-    Hash = hash_initialize(Chaining);
+    Hash = hash_initialize(Chaining, INITIAL_SIZE);
   else if(strcomp(argv[1], LINEAR) == 0)
-    Hash = hash_initialize(Linear);
+    Hash = hash_initialize(Linear, INITIAL_SIZE);
   else if(strcomp(argv[1], QUADRATIC) == 0)
-    Hash = hash_initialize(Quadratic);
+    Hash = hash_initialize(Quadratic, INITIAL_SIZE);
   else if(strcomp(argv[1], DOUBLE_HASH) == 0)
-    Hash = hash_initialize(Double_Hash);
+    Hash = hash_initialize(Double_Hash, INITIAL_SIZE);
   else{
     fprintf(stderr, "Must specify a valid colision M!");
     printHelp(argv[0]);

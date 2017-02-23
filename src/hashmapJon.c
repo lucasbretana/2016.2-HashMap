@@ -159,21 +159,21 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
 //   return a;
 // }
 
-HashMap_t *hash_initialize(ConflictMethods_t method){
+HashMap_t *hash_initialize(ConflictMethods_t method, unsigned int size){
     HashMap_t *h = malloc(sizeof(HashMap_t));
-    h->size = INITIAL_SIZE;
+    size = INITIAL_SIZE;
     h->method = method;
     h->hashConflicts = 0;
     if(method == Chaining){
-      h->keys = malloc(sizeof(hashList**) * h->size);
+      h->keys = malloc(sizeof(hashList**) * size);
       //void *p = h->keys;
-      for (size_t i = 0; i < h->size; i++) {
+      for (size_t i = 0; i < size; i++) {
         *(((hashList **) h->keys) + i) = list_create();
       }
       //h->keys = p;
     }else{
-      h->keys = malloc(sizeof(char **) * h->size); //Vector of pointers
-      for (size_t i = 0; i < h->size; i++) {
+      h->keys = malloc(sizeof(char **) * size); //Vector of pointers
+      for (size_t i = 0; i < size; i++) {
         *(((char **) h->keys) + i) = NULL;
       }
     }
