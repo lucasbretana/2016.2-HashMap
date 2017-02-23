@@ -53,6 +53,6 @@ position_t position(key_p);
 
 ReturnLog_t hash_delete(HashMap_t *, key_t *);
 // void hash_insert(HashMap_t *, key_t *);
-// void hash_get(HashMap_t *, key_t *);
+ReturnLog_t hash_get(HashMap_t *, key_t *);
 
 #endif

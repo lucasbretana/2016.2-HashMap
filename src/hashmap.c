@@ -138,3 +138,9 @@ ReturnLog_t hash_delete(HashMap_t *hash, key_p hashKey){
     }
     return log;
 }
+
+ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
+  ReturnLog_t log;
+  
+  return log;
+}
