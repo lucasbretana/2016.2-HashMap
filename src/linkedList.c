@@ -23,12 +23,15 @@ hashList* list_create(){
 }
 
 void list_free(hashList *head) {
-  // if ((*head).data != NULL) {
-  //   free((*head).data);
-  // }
-  // while ((*head).data != NULL) {
-  // }
-  // free(head);
+  hashList *toFree;
+  do{
+    if ((*head).data != NULL) {
+      free((*head).data);
+    }
+    toFree = head;;
+    head = (*head).next;
+    free(toFree);
+  }while (head != NULL);
 }
 
 /**

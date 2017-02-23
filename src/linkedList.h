@@ -7,8 +7,8 @@ typedef struct hashList{
   struct hashList *prev;
 }hashList;
 
+void list_free();
 hashList* list_create();
-hashList* list_free();
 hashList* list_get(hashList *, char *);
 int list_insert(hashList *, char *);
 int list_delete(hashList **, char *);
