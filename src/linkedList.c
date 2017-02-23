@@ -22,6 +22,15 @@ hashList* list_create(){
   return head;
 }
 
+void list_free(hashList *head) {
+  // if ((*head).data != NULL) {
+  //   free((*head).data);
+  // }
+  // while ((*head).data != NULL) {
+  // }
+  // free(head);
+}
+
 /**
  * Insert 'value' at the end of a list.
  * @returns 0 if 'value' was inserted in the head.
