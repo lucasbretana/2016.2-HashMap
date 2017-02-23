@@ -124,6 +124,7 @@ ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
             log.success = TRUE;
             // *(((key_p *)hash->keys) + log.indHash) = NULL;
             // free(string);
+            break;
           }else{
             log.localConflicts = i - log.localConflicts; // Sum +1, except on the first move
           }
@@ -145,6 +146,7 @@ ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
             log.success = TRUE;
             // *(((key_p *)hash->keys) + log.indHash) = NULL;
             // free(string);
+            break;
           }else{
             log.localConflicts = i - log.localConflicts; // Sum +1, except on the first move
           }
@@ -167,6 +169,7 @@ ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
             log.success = TRUE;
             // *(((key_p *)hash->keys) + log.indHash) = NULL;
             // free(string);
+            break;
           }else{
             log.localConflicts = i - log.localConflicts; // Sum +1, except on the first move
           }

@@ -6,6 +6,7 @@
  */
 int length(const char *k){
   int len = 0;
+  if(k == NULL) return 0;
   while(k[len] != '\0')
       len ++;
   return len;
@@ -18,7 +19,10 @@ int length(const char *k){
  */
 int strcomp(const char *s1, const char *s2)
 {
+  if((s1 == NULL) && (s2 == NULL)) return 0;
+  if(s1 == NULL) return 1;
   for ( ; *s1 == *s2; s1++, s2++)
+  if(s2 == NULL) return -1;
     if (*s1 == '\0')
 	    return 0;
   return ((*(unsigned char *)s1 < *(unsigned char *)s2) ? -1 : +1);
