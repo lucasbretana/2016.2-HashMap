@@ -84,6 +84,7 @@ ReturnLog_t hash_delete(HashMap_t *hash, key_p hashKey){
       fprintf(stderr, "There was something wrong! The conflict methodis not valid!\n");
       break;
     }
+    if(log.success == TRUE) hash->nEntrys--;
     return log;
 }
 
@@ -116,8 +117,10 @@ ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
         log.indHash = log.indH1;
         log.localConflicts = 0;
         log.success = FALSE;
-        for(unsigned i = 0; i <hash->size ; i++){
-          log.indHash = (log.indHash + i * indH2) % hash->size;
+        unsigned i = 0;
+        // for(unsigned i = 0; i <hash->size ; i++){
+        // log.indHash = (log.indHash + i * indH2) % hash->size;
+        do{
           char *string;
           string = *(((key_p *)hash->keys) + log.indHash);
           if(strcomp(string, hashKey) == 0){
@@ -128,7 +131,10 @@ ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
           }else{
             log.localConflicts++;
           }
-        }
+          i++;
+          log.indHash = (log.indHash + i * indH2) % hash->size;
+        }while(log.indHash != log.indH1);
+        // }
       }
       break;
     case Quadratic:
@@ -138,8 +144,10 @@ ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
         log.indHash = log.indH1;
         log.localConflicts = 0;
         log.success = FALSE;
-        for(unsigned i = 0; i <hash->size ; i++){
-          log.indHash = (log.indHash + i*i) % hash->size;
+        // for(unsigned i = 0; i <hash->size ; i++){
+        unsigned i = 0;
+        do{
+          // log.indHash = (log.indHash + i*i) % hash->size;
           char *string;
           string = *(((key_p *)hash->keys) + log.indHash);
           if(strcomp(string, hashKey) == 0){
@@ -150,7 +158,10 @@ ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
           }else{
             log.localConflicts++;
           }
-        }
+          i++;
+          log.indHash = (log.indHash + i + i*i) % hash->size;
+        }while(log.indHash != log.indH1);
+        // }
       }
       break;
     case Linear:
@@ -181,5 +192,13 @@ ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
       break;
     }
 
+  return log;
+}
+
+ReturnLog_t rehash(HashMap_t *hash){
+  ReturnLog_t log;
+  switch (hash->method) {
+    case Linear:
+  }
   return log;
 }
