@@ -12,7 +12,6 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
   position_t h2_position;
   ReturnLog_t operationLog;
   h1_position = h1(hashKey, (*hash).size, &hcode);
-
   operationLog.code = hcode;
   operationLog.indH1 = h1_position;
   int conflict = 0;
@@ -151,6 +150,8 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
   }
   (*hash).hashConflicts += conflict;
   operationLog.localConflicts = conflict;
+  if(operationLog.success == TRUE) hash->nEntrys++;
+  if(((hash->nEntrys * 100.0) / ((float)hash->size)) > ALPHA) rehash(hash);
   return operationLog;
 }
 
@@ -161,7 +162,8 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
 
 HashMap_t *hash_initialize(ConflictMethods_t method, unsigned int size){
     HashMap_t *h = malloc(sizeof(HashMap_t));
-    size = INITIAL_SIZE;
+    h->size = size;
+    h->nEntrys = 0;
     h->method = method;
     h->hashConflicts = 0;
     if(method == Chaining){

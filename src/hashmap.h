@@ -8,7 +8,7 @@
 #define DOUBLE_HASH "-hash_duplo"
 // Static values
 #define INITIAL_SIZE 500
-#define ALPHA 0.75
+#define ALPHA 0.75f
 
 typedef long long int h_code_t;
 typedef unsigned int bulk_t;
@@ -24,6 +24,7 @@ typedef enum _ConflictMethods_t{
 typedef struct _HashMap_t{
                 void *keys;
                 bulk_t size;
+                bulk_t nEntrys;
                 ConflictMethods_t method;
                 int hashConflicts;
                 unsigned long long int insertTime;
@@ -35,8 +36,8 @@ typedef enum _boolean_t{
               FALSE = 0
 } Boolean_t;
 typedef struct _ReturnLog{
-                unsigned int indH1;
-                unsigned int localConflicts;
+                int indH1;
+                int localConflicts;
                 int indHash;
                 h_code_t code;
                 Boolean_t success;
@@ -54,5 +55,5 @@ position_t position(key_p);
 ReturnLog_t hash_delete(HashMap_t *, key_t *);
 // void hash_insert(HashMap_t *, key_t *);
 ReturnLog_t hash_get(HashMap_t *, key_t *);
-
+ReturnLog_t rehash(HashMap_t *);
 #endif
