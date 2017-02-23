@@ -54,7 +54,7 @@ ReturnLog_t log;
       log = hash_delete(Hash, in);
       printf("%s %s %lld %u %i %u %s\n", DELETE, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
     }else if(strcomp(op, INSERT) == 0){
-      log = hash_insert(Hash, in);
+      log = hash_insert(&Hash, in);
       if (log.indHash < 0)
         printf("%s %s %lld %u %u %s\n", INSERT, in, log.code, log.indH1, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
       else

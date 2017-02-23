@@ -6,8 +6,9 @@
 #include "usefull.h"
 #include "linkedList.h"
 
-ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
+ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
   h_code_t hcode;
+  HashMap_t *hash = *h;
   position_t h1_position;
   position_t h2_position;
   ReturnLog_t operationLog;
@@ -85,7 +86,7 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
 
       operationLog.success = TRUE;
       for (probing = 1, conflict = 1; (*aux) != NULL; probing++, conflict++) {
-        // printf("S1:%s\nS2:%s\nProbing:%i\n",(*aux),hashKey,probing);
+        printf("S1:%s\nS2:%s\nProbing:%i\n",(*aux),hashKey,probing);
         if (strcomp((*aux), hashKey) == 0) {
           operationLog.success = FALSE;
           probing++;
@@ -151,8 +152,9 @@ ReturnLog_t hash_insert(HashMap_t *hash, key_p hashKey){
   (*hash).hashConflicts += conflict;
   operationLog.localConflicts = conflict;
   if(operationLog.success == TRUE) hash->nEntrys++;
-  fprintf(stderr, "ALPHA %f\nLOAD FACTOR %f\n", ALPHA, ((hash->nEntrys * 100.0) / ((float)hash->size)));
-  if(((hash->nEntrys * 100.0) / ((float)hash->size)) > ALPHA) rehash(hash);
+  fprintf(stderr, "LOAD FACTOR %f\n", ((hash->nEntrys * 1.0) / ((float)hash->size)));
+  fprintf(stderr, "Entrys %f\nhash->size %f\n\n\n", (hash->nEntrys * 1.0), ((float)hash->size));
+  if(((hash->nEntrys * 1.0) / ((float)hash->size)) > ALPHA) hash = rehash(hash);
   return operationLog;
 }
 

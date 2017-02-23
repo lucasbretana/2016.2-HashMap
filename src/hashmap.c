@@ -197,7 +197,7 @@ ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
 }
 
 HashMap_t *rehash(HashMap_t *hash){
-  ReturnLog_t log;
+  fprintf(stderr, "Before: %p\t", hash);
   HashMap_t *newHash = hash_initialize(hash->method, hash->size * 2);
   // int indOldHash = 0, indNewHash = 0;
 
@@ -206,7 +206,7 @@ HashMap_t *rehash(HashMap_t *hash){
       char *string;
       string = *(((key_p *)hash->keys) + i);
       if(string != NULL)
-        hash_insert(newHash, string);
+        hash_insert(&newHash, string);
     }
   }else{
     for(unsigned i = 0; i <hash->size ; i++){
@@ -215,7 +215,7 @@ HashMap_t *rehash(HashMap_t *hash){
       do{
         // if(seeker->data != NULL){
         // }
-        hash_insert(newHash, seeker->data);
+        hash_insert(&newHash, seeker->data);
         seeker = seeker->next;
         free(toFree->data);
         free(toFree);
@@ -223,5 +223,7 @@ HashMap_t *rehash(HashMap_t *hash){
       }while(seeker->next != NULL);;
     }
   }
+  fprintf(stderr, "After: %p\n", hash);
+
   return newHash;
 }
