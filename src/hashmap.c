@@ -82,10 +82,11 @@ ReturnLog_t hash_delete(HashMap_t *hash, key_p hashKey){
       free(string);
       break;
     default:
-      fprintf(stderr, "There was something wrong! The conflict methodis not valid!\n");
+      //fprintf(stderr, "There was something wrong! The conflict methodis not valid!\n");
       break;
     }
     if(log.success == TRUE) hash->nEntrys--;
+    hash->hashConflicts += log.localConflicts;
     return log;
 }
 
@@ -189,15 +190,15 @@ ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
       }
       break;
     default:
-      fprintf(stderr, "There was something wrong! The conflict methodis not valid!\n");
+      //fprintf(stderr, "There was something wrong! The conflict methodis not valid!\n");
       break;
     }
-
+  hash->hashConflicts += log.localConflicts;
   return log;
 }
 
 HashMap_t *rehash(HashMap_t *hash){
-  // fprintf(stderr, "Before: %p\t", hash);
+  // //fprintf(stderr, "Before: %p\t", hash);
   HashMap_t *newHash = hash_initialize(hash->method, hash->size * 2);
   // int indOldHash = 0, indNewHash = 0;
 
@@ -210,10 +211,10 @@ HashMap_t *rehash(HashMap_t *hash){
       }
     }
   }else{
-    fprintf(stderr, "\nBegin if else");
+    //fprintf(stderr, "\nBegin if else");
     hashList *seeker;
     for(unsigned i = 0; i <hash->size ; i++){
-      fprintf(stderr, "\nFor loop %d", i);
+      //fprintf(stderr, "\nFor loop %d", i);
       seeker = *(((hashList**)hash->keys) + i);
       if(seeker->data != NULL){
         hash_insert(&newHash, seeker->data);
@@ -221,11 +222,11 @@ HashMap_t *rehash(HashMap_t *hash){
     //  list_free(seeker);
     }
   }
-  fprintf(stderr, "\nEnd else");
+  //fprintf(stderr, "\nEnd else");
   // printf("\nBefore hash_free");
-  fprintf(stderr, "\nEnd else1");
+  //fprintf(stderr, "\nEnd else1");
   hash_free(hash);
-  fprintf(stderr, "\nAfter hash_free\n");
+  //fprintf(stderr, "\nAfter hash_free\n");
   return newHash;
 }
 

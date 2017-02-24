@@ -1,14 +1,18 @@
 .TH TABELA_HASH 1
 .SH NAME
-DilMae.out \- Implementação em C para uma Tabela Hash com suporte à rehash e 4 metodos de tratamento de conflitos.
+tabelaHash.out \- Implementação em C para uma Tabela Hash com suporte à rehash e 4 métodos de tratamento de conflitos.
 .SH SYNOPSIS
-.B corrupt
-[\fB\-n\fR \fIBITS\fR]
-[\fB\-\-bits\fR \fIBITS\fR]
-.IR file ...
+.B tabelaHash.out
+.IR option
 .SH DESCRIPTION
-.B corrupt
-modifies files by toggling a randomly chosen bit.
+.B tabelaHash.out
+Tabelha Hash implementada em C com suporte à 4 métodos de tratamento de conflitos e rehash.
+.PP
+Entradas aceitas consistem em \fBAÇÃO\fR \fBCHAVE\fR
+Com \fBAÇÃO\fR podendo ser
+        \fIINSERT\fR
+        \fIGET\fR
+        \fIDELETE\fR
 .SH OPTIONS
 .TP
 .BR \-n ", " \-\-bits =\fIBITS\fR

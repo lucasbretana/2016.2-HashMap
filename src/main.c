@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "usefull.h"
 #include "hashmap.h"
 #include "hashmapJon.h"
@@ -48,27 +49,32 @@ int main(int argc, char **argv) {
   char op[7];
   key_t *in = malloc(sizeof(key_p) * KEY_MAX_SIZE);
 
-ReturnLog_t log;
+  ReturnLog_t log;
+  clock_t start = clock();
   while(scanf("%s %[^\n]s", op, in) == 2) {
     if(strcomp(op, DELETE) == 0){
       log = hash_delete(Hash, in);
       printf("%s %s %lld %u %i %u %s\n", DELETE, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
     }else if(strcomp(op, INSERT) == 0){
       log = hash_insert(&Hash, in);
-      fprintf(stderr, "Before the NEW insert\n");
+      //fprintf(stderr, "Before the NEW insert\n");
       if (log.indHash < 0)
         printf("%s %s %lld %u %u %s\n", INSERT, in, log.code, log.indH1, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
       else
         printf("%s %s %lld %u %i %u %s\n", INSERT, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
-      fprintf(stderr, "After the OLD insert\n");
+      //fprintf(stderr, "After the OLD insert\n");
     }else if(strcomp(op, GET) == 0){
       log = hash_get(Hash, in);
       printf("%s %s %lld %u %i %u %s\n", GET, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
     }else
       fprintf(stderr, "Invalid operation (%s).", op);
   }
-  free(in);
+  printf("TOTAL CONFLICTS: %d\n",Hash->hashConflicts);
+  // free(in);
   hash_free(Hash);
+  clock_t end = clock();
+  double time = (double)(end - start) / CLOCKS_PER_SEC;
+  printf("TOTAL TIME TO RUN: %f\n", time);
   return SUCCESS;
 }
 

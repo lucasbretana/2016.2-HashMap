@@ -21,9 +21,6 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
   switch ((*hash).method) {
     case Chaining:
       operationLog.indHash = h1_position;
-      if(h1_position == 0){
-        printf("\nPARA, PORRA!\n");
-      }
       switch (list_insert(*(((hashList **)(*hash).keys) + h1_position), hashKey)) {
         case 0:
           conflict = 0;
@@ -174,7 +171,6 @@ HashMap_t *hash_initialize(ConflictMethods_t method, unsigned int size){
     h->size = size;
     h->nEntrys = 0;
     h->method = method;
-    h->hashConflicts = 0;
     if(method == Chaining){
       h->keys = malloc(sizeof(hashList**) * size);
       //void *p = h->keys;
