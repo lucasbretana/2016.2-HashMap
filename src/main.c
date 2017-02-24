@@ -4,7 +4,7 @@
 #include "hashmap.h"
 #include "hashmapJon.h"
 
-#define KEY_MAX_SIZE 100
+#define KEY_MAX_SIZE 103
 
 // Operations
 #define GET "GET"
@@ -55,17 +55,20 @@ ReturnLog_t log;
       printf("%s %s %lld %u %i %u %s\n", DELETE, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
     }else if(strcomp(op, INSERT) == 0){
       log = hash_insert(&Hash, in);
+      fprintf(stderr, "Before the NEW insert\n");
       if (log.indHash < 0)
         printf("%s %s %lld %u %u %s\n", INSERT, in, log.code, log.indH1, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
       else
         printf("%s %s %lld %u %i %u %s\n", INSERT, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
+      fprintf(stderr, "After the OLD insert\n");
     }else if(strcomp(op, GET) == 0){
       log = hash_get(Hash, in);
       printf("%s %s %lld %u %i %u %s\n", GET, in, log.code, log.indH1, log.indHash, log.localConflicts, log.success ? "SUCCESS" : "FAIL");
     }else
       fprintf(stderr, "Invalid operation (%s).", op);
   }
-
+  free(in);
+  hash_free(Hash);
   return SUCCESS;
 }
 

@@ -27,10 +27,12 @@ void list_free(hashList *head) {
   do{
     if ((*head).data != NULL) {
       free((*head).data);
+      (*head).data = NULL;
     }
     toFree = head;;
     head = (*head).next;
     free(toFree);
+    toFree = NULL;
   }while (head != NULL);
 }
 
@@ -46,16 +48,16 @@ int list_insert(hashList *head, char *value){
   if(head == NULL){
     return -1;
   }
-  node = malloc(sizeof(hashList));
-  if (node == NULL) {
-    return -1;
-  }
   if((*head).data == NULL){ //If head is empty, write info in head;
-    myValue = malloc(length(value) * sizeof(char));
+    myValue = malloc((length(value) + 3) * sizeof(char));
     strcopy(myValue, value);
     (*head).data = myValue;
     return 0;
   }else{
+    node = malloc(sizeof(hashList));
+    if (node == NULL) {
+      return -1;
+    }
     if ((*head).next != NULL) { //If head isn't the last element then
       last = head;
       do{                       //Go to the last element

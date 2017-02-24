@@ -56,4 +56,5 @@ ReturnLog_t hash_delete(HashMap_t *, key_t *);
 // void hash_insert(HashMap_t *, key_t *);
 ReturnLog_t hash_get(HashMap_t *, key_t *);
 HashMap_t *rehash(HashMap_t *);
+void hash_free(HashMap_t *);
 #endif

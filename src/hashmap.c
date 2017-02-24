@@ -207,35 +207,44 @@ HashMap_t *rehash(HashMap_t *hash){
       string = *(((key_p *)hash->keys) + i);
       if(string != NULL){
         hash_insert(&newHash, string);
-        free(string);
       }
     }
   }else{
+    fprintf(stderr, "\nBegin if else");
     hashList *seeker;
-    hashList *toFree;
     for(unsigned i = 0; i <hash->size ; i++){
+      fprintf(stderr, "\nFor loop %d", i);
       seeker = *(((hashList**)hash->keys) + i);
-      toFree = seeker;
-      do{
-        if(seeker->data != NULL){
-          hash_insert(&newHash, seeker->data);
-          free(toFree->data);
-        }
-        if(seeker->next != NULL){
-          free(seeker);
-          free(seeker->next);
-          free(seeker->prev);
-          seeker = NULL;
-        }else{
-          seeker = seeker->next;
-          free(toFree);
-          free(toFree->next);
-          free(toFree->prev);
-        }
-        toFree = seeker;
-      }while(seeker != NULL);
+      if(seeker->data != NULL){
+        hash_insert(&newHash, seeker->data);
+      }
+    //  list_free(seeker);
     }
   }
-
+  fprintf(stderr, "\nEnd else");
+  // printf("\nBefore hash_free");
+  fprintf(stderr, "\nEnd else1");
+  hash_free(hash);
+  fprintf(stderr, "\nAfter hash_free\n");
   return newHash;
+}
+
+void hash_free(HashMap_t *hash){
+  if(hash == NULL) return;
+  if(hash->method != Chaining){
+    for(unsigned i=0 ; i<hash->size ; i++){
+      if(*(((key_t **)hash->keys) + i) != NULL) free(*(((key_t **)hash->keys) + i));
+      *(((key_t **)hash->keys) + i) = NULL;
+      // if((((key_t **)hash->keys) + i) != NULL) free((((key_t **)hash->keys) + i));
+    }
+  }else{
+    for(unsigned i=0 ; i<hash->size ; i++){
+      list_free(*(((hashList **)hash->keys) + i));
+      // if(*(((hashList **)hash->keys) + i) != NULL) free(*(((hashList **)hash->keys) + i));
+      *(((hashList **)hash->keys) + i) = NULL;
+      // if((((hashList **)hash->keys) + i) != NULL) free((((hashList **)hash->keys) + i));
+    }
+  }
+  printf("free(hash->keys)");
+  free(hash->keys);
 }

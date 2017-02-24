@@ -21,6 +21,9 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
   switch ((*hash).method) {
     case Chaining:
       operationLog.indHash = h1_position;
+      if(h1_position == 0){
+        printf("\nPARA, PORRA!\n");
+      }
       switch (list_insert(*(((hashList **)(*hash).keys) + h1_position), hashKey)) {
         case 0:
           conflict = 0;
@@ -154,7 +157,10 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
   if(operationLog.success == TRUE) hash->nEntrys++;
   // fprintf(stderr, "LOAD FACTOR %f\n", ((hash->nEntrys * 1.0) / ((float)hash->size)));
   // fprintf(stderr, "Entrys %f\nhash->size %f\n\n\n", (hash->nEntrys * 1.0), ((float)hash->size));
-  if(((hash->nEntrys * 1.0) / ((float)hash->size)) > ALPHA) (*h) = rehash(hash);
+  if(((hash->nEntrys * 1.0) / ((float)hash->size)) > ALPHA){
+    (*h) = rehash(hash);
+    fprintf(stderr, "\nAfter rehash");
+  }
   return operationLog;
 }
 
