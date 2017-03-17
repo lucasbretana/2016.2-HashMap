@@ -203,13 +203,18 @@ HashMap_t *rehash(HashMap_t *hash){
   // int indOldHash = 0, indNewHash = 0;
 
   if(hash->method != Chaining){
+    int reInserts = 0;
+    char *string;
     for(unsigned i = 0; i <hash->size ; i++){
-      char *string;
       string = *(((key_p *)hash->keys) + i);
       if(string != NULL){
-        hash_insert(&newHash, string);
+        if((hash_insert(&newHash, string)).success == TRUE){
+          // fprintf(stderr, "Reinserido:%s\n",string);
+          reInserts ++;
+        }
       }
     }
+    fprintf(stderr, "%i foram re inseridas\n",reInserts);
   }else{
     //fprintf(stderr, "\nBegin if else");
     hashList *seeker;
@@ -219,24 +224,33 @@ HashMap_t *rehash(HashMap_t *hash){
       if(seeker->data != NULL){
         hash_insert(&newHash, seeker->data);
       }
-    //  list_free(seeker);
     }
   }
   //fprintf(stderr, "\nEnd else");
   // printf("\nBefore hash_free");
   //fprintf(stderr, "\nEnd else1");
   hash_free(hash);
-  //fprintf(stderr, "\nAfter hash_free\n");
+  fprintf(stderr, "\nTERMINEI O REHASH\n");
   return newHash;
 }
 
 void hash_free(HashMap_t *hash){
+  fprintf(stderr, "Tentando o Free em:%p\n",hash);
   if(hash == NULL) return;
   if(hash->method != Chaining){
+    int reInserts = 0;
+    char *string;
     for(unsigned i=0 ; i<hash->size ; i++){
-      if(*(((key_t **)hash->keys) + i) != NULL) free(*(((key_t **)hash->keys) + i));
+      string = *(((key_p *)hash->keys) + i);
+      if(string != NULL){
+        // fprintf(stderr, "removendo:%s\n", string);
+        reInserts++;
+        // fprintf(stderr, "String:%s\n", *(((key_t **)hash->keys) + i));
+        free(string);
+      }
       *(((key_t **)hash->keys) + i) = NULL;
     }
+    fprintf(stderr, "%i foram removidos\n",reInserts);
   }else{
     for(unsigned i=0 ; i<hash->size ; i++){
       list_free(*(((hashList **)hash->keys) + i));

@@ -54,20 +54,23 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
         operationLog.indHash = h1_position;
         operationLog.success = TRUE;
         break; //Leaves if that was no conflict
-      }
-
-      operationLog.success = TRUE;
-      for (probing = 0; (*aux) != NULL; probing++) {
-        conflict += 1;
-        if (strcomp((*aux), hashKey) == 0) {
-          operationLog.success = FALSE;
-          break;
+      }else{
+        operationLog.success = TRUE;
+        for (probing = 0; ((*aux) != NULL); probing++) {
+          conflict += 1;
+          if (strcomp((*aux), hashKey) == 0) {
+            // fprintf(stderr, "DEU FALSE AQUI");
+            operationLog.success = FALSE;
+            break;
+          }
+          aux = (((char **)(*hash).keys) + ((h1_position + probing) % (*hash).size));
         }
-        aux = (((char **)(*hash).keys) + ((h1_position + probing) % (*hash).size));
       }
 
-      (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
-      strcopy(*aux, hashKey);
+      if (operationLog.success == TRUE) {
+        (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
+        strcopy(*aux, hashKey);
+      }
       conflict -= 1; //Because probing started testing position 0;
       probing  -= 1; //Because probing started testing position 0;
       operationLog.indHash = (h1_position + probing) % (*hash).size;
@@ -86,7 +89,6 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
 
       operationLog.success = TRUE;
       for (probing = 1, conflict = 1; (*aux) != NULL; probing++, conflict++) {
-        // printf("S1:%s\nS2:%s\nProbing:%i\n",(*aux),hashKey,probing);
         if (strcomp((*aux), hashKey) == 0) {
           operationLog.success = FALSE;
           probing++;
@@ -156,8 +158,6 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
   // fprintf(stderr, "Entrys %f\nhash->size %f\n\n\n", (hash->nEntrys * 1.0), ((float)hash->size));
   if(((hash->nEntrys * 1.0) / ((float)hash->size)) > ALPHA){
     (*h) = rehash(hash);
-    // free(hash);
-    // fprintf(stderr, "\nAfter rehash");
   }
   return operationLog;
 }
