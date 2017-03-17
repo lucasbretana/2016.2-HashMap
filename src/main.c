@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
       fprintf(stderr, "Invalid operation (%s).", op);
   }
   printf("TOTAL CONFLICTS: %d\n",Hash->hashConflicts);
-  // free(in);
+  free(in);
   hash_free(Hash);
   clock_t end = clock();
   double time = (double)(end - start) / CLOCKS_PER_SEC;

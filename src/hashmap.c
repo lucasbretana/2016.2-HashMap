@@ -236,16 +236,16 @@ void hash_free(HashMap_t *hash){
     for(unsigned i=0 ; i<hash->size ; i++){
       if(*(((key_t **)hash->keys) + i) != NULL) free(*(((key_t **)hash->keys) + i));
       *(((key_t **)hash->keys) + i) = NULL;
-      // if((((key_t **)hash->keys) + i) != NULL) free((((key_t **)hash->keys) + i));
     }
   }else{
     for(unsigned i=0 ; i<hash->size ; i++){
       list_free(*(((hashList **)hash->keys) + i));
-      // if(*(((hashList **)hash->keys) + i) != NULL) free(*(((hashList **)hash->keys) + i));
+      //if(*(((hashList **)hash->keys) + i) != NULL) free(*(((hashList **)hash->keys) + i));
       *(((hashList **)hash->keys) + i) = NULL;
       // if((((hashList **)hash->keys) + i) != NULL) free((((hashList **)hash->keys) + i));
     }
   }
-  printf("free(hash->keys)");
+  //  printf("free(hash->keys)");
   free(hash->keys);
+  free(hash);
 }

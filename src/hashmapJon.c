@@ -86,7 +86,7 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
 
       operationLog.success = TRUE;
       for (probing = 1, conflict = 1; (*aux) != NULL; probing++, conflict++) {
-        printf("S1:%s\nS2:%s\nProbing:%i\n",(*aux),hashKey,probing);
+        // printf("S1:%s\nS2:%s\nProbing:%i\n",(*aux),hashKey,probing);
         if (strcomp((*aux), hashKey) == 0) {
           operationLog.success = FALSE;
           probing++;
@@ -156,7 +156,8 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
   // fprintf(stderr, "Entrys %f\nhash->size %f\n\n\n", (hash->nEntrys * 1.0), ((float)hash->size));
   if(((hash->nEntrys * 1.0) / ((float)hash->size)) > ALPHA){
     (*h) = rehash(hash);
-    fprintf(stderr, "\nAfter rehash");
+    // free(hash);
+    // fprintf(stderr, "\nAfter rehash");
   }
   return operationLog;
 }
