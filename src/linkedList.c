@@ -26,7 +26,7 @@ void list_free(hashList *head) {
   hashList *toFree;
   do{
     if ((*head).data != NULL) {
-      // free((*head).data);
+      free((*head).data);
       (*head).data = NULL;
     }
     toFree = head;
@@ -49,40 +49,39 @@ int list_insert(hashList *head, char *value){
     return -1;
   }
   if((*head).data == NULL){ //If head is empty, write info in head;
-    myValue = malloc((length(value)) * sizeof(char));
+    myValue = malloc(((length(value)) * sizeof(char)) + 1);
     strcopy(myValue, value);
     (*head).data = myValue;
     return 0;
-  }else{
-    if ((*head).next != NULL) { //If head isn't the last element then
-      last = head;
-      do{                       //Go to the last element
-        last = (*last).next;
-        if (strcomp((*last).data,value) == 0){
-          return 2; //Value already inside the list, abort
-        }
-      }while((*last).next != NULL);
-    }else{                      //So head IS the last element
-      if (strcomp((*head).data,value) == 0){
-        return 1; //Value already in the head, abort
-      }
-      last = head;              //The head is the last element
-    }
-    //Now that we have the last element in the list
-    node = malloc(sizeof(hashList));
-    if (node == NULL) {
-      return -1;
-    }
-    myValue = malloc(length(value) * sizeof(char));
-    strcopy(myValue, value);
-    (*node).data = myValue;
-    (*node).prev = last;
-    (*node).next = NULL;
-    (*last).next = node;
-    //Now the new node is the new last elemnet.
-    //fprintf(stderr, "Returning 3\n");
-    return 3;
   }
+  if ((*head).next != NULL) { //If head isn't the last element then
+    last = head;
+    do{                       //Go to the last element
+      last = (*last).next;
+      if (strcomp((*last).data,value) == 0){
+        return 2; //Value already inside the list, abort
+      }
+    }while((*last).next != NULL);
+  }else{                      //So head IS the last element
+    if (strcomp((*head).data,value) == 0){
+      return 1; //Value already in the head, abort
+    }
+    last = head;              //The head is the last element
+  }
+  //Now that we have the last element in the list
+  node = malloc(sizeof(hashList));
+  if (node == NULL) {
+    return -1;
+  }
+  myValue = malloc((length(value) * sizeof(char)) + 1);
+  strcopy(myValue, value);
+  (*node).data = myValue;
+  (*node).prev = last;
+  (*node).next = NULL;
+  (*last).next = node;
+  //Now the new node is the new last elemnet.
+  //fprintf(stderr, "Returning 3\n");
+  return 3;
 
 }
 

@@ -48,7 +48,7 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
     case Linear:
       aux = ((char **)(*hash).keys) + h1_position;
       if((*aux) == NULL) {
-        (*aux) = malloc(length(hashKey) * sizeof(char *));
+        (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
         strcopy(*aux, hashKey);
 
         operationLog.indHash = h1_position;
@@ -66,7 +66,7 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
         aux = (((char **)(*hash).keys) + ((h1_position + probing) % (*hash).size));
       }
 
-      (*aux) = malloc(length(hashKey) * sizeof(char *));
+      (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
       strcopy(*aux, hashKey);
       conflict -= 1; //Because probing started testing position 0;
       probing  -= 1; //Because probing started testing position 0;
@@ -76,7 +76,7 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
       aux = ((char **)(*hash).keys) + h1_position;
       h2_position = h2(hashKey, (*hash).size);
       if((*aux) == NULL) {
-        (*aux) = malloc(length(hashKey) * sizeof(char *));
+        (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
         strcopy(*aux, hashKey);
 
         operationLog.indHash = h1_position;
@@ -103,7 +103,7 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
       if (probing < 0) {
         operationLog.indHash = -666;
       }else{
-        (*aux) = malloc(length(hashKey) * sizeof(char *));
+        (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
         strcopy(*aux, hashKey);
         conflict -= 1;
         probing  -= 1;
@@ -114,7 +114,7 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
       aux = ((char **)(*hash).keys) + h1_position;
       h2_position = h2(hashKey, (*hash).size);
       if((*aux) == NULL) {
-        (*aux) = malloc(length(hashKey) * sizeof(char *));
+        (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
         strcopy(*aux, hashKey);
 
         operationLog.indHash = h1_position;
@@ -141,7 +141,7 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
       if (probing < 0) {
         operationLog.indHash = -666;
       }else{
-        (*aux) = malloc(length(hashKey) * sizeof(char *));
+        (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
         strcopy(*aux, hashKey);
         conflict -= 1;
         probing  -= 1;
