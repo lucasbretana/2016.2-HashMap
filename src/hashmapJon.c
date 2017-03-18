@@ -59,7 +59,6 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
         for (probing = 0; ((*aux) != NULL); probing++) {
           conflict += 1;
           if (strcomp((*aux), hashKey) == 0) {
-            // fprintf(stderr, "DEU FALSE AQUI");
             operationLog.success = FALSE;
             break;
           }
@@ -77,7 +76,6 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
       break;
     case Quadratic:
       aux = ((char **)(*hash).keys) + h1_position;
-      h2_position = h2(hashKey, (*hash).size);
       if((*aux) == NULL) {
         (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
         strcopy(*aux, hashKey);
@@ -98,15 +96,17 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
         aux = ((char **)(*hash).keys) + ((h1_position + probing + probing * probing) % (*hash).size);
         if (((h1_position + probing + probing * probing) % (*hash).size) == h1_position){ // If position has returned to h1, we can't write data in the hash
           operationLog.success = FALSE;
-          probing = -666;
+          probing = -1;
           break;
         }
       }
-      if (probing < 0) {
-        operationLog.indHash = -666;
-      }else{
+      if (operationLog.success == TRUE) {
         (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
         strcopy(*aux, hashKey);
+      }
+      if (probing < 0) {
+        operationLog.indHash = -1;
+      }else{
         conflict -= 1;
         probing  -= 1;
         operationLog.indHash = (h1_position + probing + probing * probing) % (*hash).size;
@@ -140,11 +140,13 @@ ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
           break;
         }
       }
-      if (probing < 0) {
-        operationLog.indHash = -666;
-      }else{
+      if (operationLog.success == TRUE) {
         (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
         strcopy(*aux, hashKey);
+      }
+      if (probing < 0) {
+        operationLog.indHash = -1;
+      }else{
         conflict -= 1;
         probing  -= 1;
         operationLog.indHash = (h1_position + (probing * h2_position)) % (*hash).size;
