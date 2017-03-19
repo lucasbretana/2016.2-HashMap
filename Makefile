@@ -1,7 +1,7 @@
 TARGET = DilMae
 #
 CC = gcc
-CC_FLAG = -std=c11 -Wall $(DEBUG)
+CC_FLAG = -std=c11 -Wall
 RM = rm
 RM_FLAG = -rf
 # Basic directories
