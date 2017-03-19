@@ -48,38 +48,47 @@ position_t h2(key_p k, bulk_t size){
 ReturnLog_t hash_delete(HashMap_t *hash, key_p hashKey){
   ReturnLog_t log;
   char *string = NULL;
-  hashList *list;
+  hashList **list;
   // h_code_t code;
 
   switch(hash->method){
     case Chaining:
-      log.indH1 = h1(hashKey, length(hashKey), &log.code);
+      log.indH1 = h1(hashKey, hash->size, &log.code);
       log.indHash = log.indH1;
-      list = ((hashList *)hash->keys) + log.indH1;
-      log.localConflicts = list_delete(&list, hashKey);
+      list = ((hashList **) hash->keys) + log.indH1;
+      log.localConflicts = list_delete(list, hashKey);
       log.success = TRUE;
       if(log.localConflicts == -1){
         log.localConflicts = 1;
+        log.success = FALSE;
+      }else if(log.localConflicts == -2) {
+        log.localConflicts = 0;
         log.success = FALSE;
       }
       break;
     case Double_Hash:
       log = hash_get(hash, hashKey);
-      string = *(((key_p *)hash->keys) + log.indHash);
-      *(((key_p *)hash->keys) + log.indHash) = NULL;
-      free(string);
+      if (log.success) {
+        string = *(((key_p *)hash->keys) + log.indHash);
+        *(((key_p *)hash->keys) + log.indHash) = NULL;
+        free(string);
+      }
       break;
     case Quadratic:
       log = hash_get(hash, hashKey);
-      string = *(((key_p *)hash->keys) + log.indHash);
-      *(((key_p *)hash->keys) + log.indHash) = NULL;
-      free(string);
+      if (log.success) {
+        string = *(((key_p *)hash->keys) + log.indHash);
+        *(((key_p *)hash->keys) + log.indHash) = NULL;
+        free(string);
+      }
       break;
     case Linear:
       log = hash_get(hash, hashKey);
-      string = *(((key_p *)hash->keys) + log.indHash);
-      *(((key_p *)hash->keys) + log.indHash) = NULL;
-      free(string);
+      if (log.success) {
+        string = *(((key_p *)hash->keys) + log.indHash);
+        *(((key_p *)hash->keys) + log.indHash) = NULL;
+        free(string);
+      }
       break;
     default:
       //fprintf(stderr, "There was something wrong! The conflict methodis not valid!\n");
@@ -96,15 +105,16 @@ ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
   switch(hash->method){
     case Chaining:
       {
-        log.indH1 = h1(hashKey, length(hashKey), &log.code);
+        log.indH1 = h1(hashKey, hash->size, &log.code);
         log.indHash = log.indH1;
-        list = ((hashList *)hash->keys) + log.indH1;
-        if(list_get(list, hashKey) == NULL){
+        list = list_get(*( ((hashList **) hash->keys) + log.indH1), hashKey);
+        if(list == NULL){
           log.localConflicts = 1;
           log.success = FALSE;
-        }else if(list_get(list, hashKey)->prev == NULL){
+        }else if(list->prev == NULL){
           log.localConflicts = 0;
-          log.success = TRUE;
+          if (list->data == NULL) log.success = FALSE;
+          else log.success = TRUE;
         }else{
           log.localConflicts = 1;
           log.success = TRUE;
@@ -116,75 +126,58 @@ ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
         // h'(k, i) = (h1(k) + i * h2(k)) mod size
         log.indH1 = h1(hashKey, hash->size, &log.code);
         unsigned int indH2 = h2(hashKey, hash->size);
-        log.indHash = log.indH1;
-        log.localConflicts = 0;
         log.success = FALSE;
-        unsigned i = 0;
-        // for(unsigned i = 0; i <hash->size ; i++){
-        // log.indHash = (log.indHash + i * indH2) % hash->size;
-        do{
-          char *string;
-          string = *(((key_p *)hash->keys) + log.indHash);
-          if(strcomp(string, hashKey) == 0){
+        char *string;
+        for(log.localConflicts = 0; log.localConflicts < hash->size; log.localConflicts ++){
+          log.indHash = (log.indH1 + (log.localConflicts * indH2)) % hash->size;
+          string = *( ((char **) (*hash).keys) + log.indHash);
+          if (strcomp(string, hashKey) == 0) {
             log.success = TRUE;
-            // *(((key_p *)hash->keys) + log.indHash) = NULL;
-            // free(string);
             break;
-          }else{
-            log.localConflicts++;
           }
-          i++;
-          log.indHash = (log.indHash + i * indH2) % hash->size;
-        }while(log.indHash != log.indH1);
-        // }
+          if ((log.indH1 + ((log.localConflicts+1) * indH2)) % hash->size == log.indH1){
+            log.success = FALSE;
+            break;
+          }
+        }
       }
       break;
     case Quadratic:
       {
-        // h'(k, i) = (h1(k) +i^2) mod size
         log.indH1 = h1(hashKey, hash->size, &log.code);
         log.indHash = log.indH1;
-        log.localConflicts = 0;
         log.success = FALSE;
-        // for(unsigned i = 0; i <hash->size ; i++){
-        unsigned i = 0;
-        do{
-          // log.indHash = (log.indHash + i*i) % hash->size;
-          char *string;
-          string = *(((key_p *)hash->keys) + log.indHash);
-          if(strcomp(string, hashKey) == 0){
+        char *string;
+        for(log.localConflicts = 0; log.localConflicts < hash->size; log.localConflicts ++){
+          log.indHash = (log.indH1 + log.localConflicts + log.localConflicts * log.localConflicts) % hash->size;
+          string = *( ((char **) (*hash).keys) + log.indHash);
+          if (strcomp(string, hashKey) == 0) {
             log.success = TRUE;
-            // *(((key_p *)hash->keys) + log.indHash) = NULL;
-            // free(string);
             break;
-          }else{
-            log.localConflicts++;
           }
-          i++;
-          log.indHash = (log.indHash + i + i*i) % hash->size;
-        }while(log.indHash != log.indH1);
-        // }
+          if ((log.indH1 + (log.localConflicts+1) + (log.localConflicts+1) * (log.localConflicts+1)) % hash->size == log.indH1){
+            log.success = FALSE;
+            break;
+          }
+        }
       }
       break;
     case Linear:
       {
-        // On this case what we have is a char ** || key_p *
-        // h'(k, i) = (h1(k) +i) mod size
         log.indH1 = h1(hashKey, hash->size, &log.code);
-        log.indHash = log.indH1;
         log.localConflicts = 0;
         log.success = FALSE;
-        for(unsigned i = 0; i <hash->size ; i++){
-          log.indHash = (log.indHash + i) % hash->size;
-          char *string;
-          string = *(((key_p *)hash->keys) + log.indHash);
-          if(strcomp(string, hashKey) == 0){
+        char *string;
+        for(log.localConflicts = 0; log.localConflicts < hash->size; log.localConflicts ++){
+          log.indHash = (log.indH1 + log.localConflicts) % hash->size;
+          string = *( ((char **) (*hash).keys) + log.indHash);
+          if (strcomp(string, hashKey) == 0) {
             log.success = TRUE;
-            // *(((key_p *)hash->keys) + log.indHash) = NULL;
-            // free(string);
             break;
-          }else{
-            log.localConflicts++;
+          }
+          if ((log.indH1 + log.localConflicts + 1) % hash->size == log.indH1){
+            log.success = FALSE;
+            break;
           }
         }
       }
@@ -203,39 +196,34 @@ HashMap_t *rehash(HashMap_t *hash){
   // int indOldHash = 0, indNewHash = 0;
 
   if(hash->method != Chaining){
-    int reInserts = 0;
     char *string;
     for(unsigned i = 0; i <hash->size ; i++){
       string = *(((key_p *)hash->keys) + i);
       if(string != NULL){
-        if((hash_insert(&newHash, string)).success == TRUE){
-          // fprintf(stderr, "Reinserido:%s\n",string);
-          reInserts ++;
-        }
+        hash_insert(&newHash, string);
       }
     }
-    fprintf(stderr, "%i foram re inseridas\n",reInserts);
+    // fprintf(stderr, "%i foram re inseridas\n",reInserts);
   }else{
     //fprintf(stderr, "\nBegin if else");
     hashList *seeker;
     for(unsigned i = 0; i <hash->size ; i++){
-      //fprintf(stderr, "\nFor loop %d", i);
       seeker = *(((hashList**)hash->keys) + i);
-      if(seeker->data != NULL){
-        hash_insert(&newHash, seeker->data);
+      while (seeker != NULL && seeker->data != NULL) {
+        if(seeker->data != NULL){
+          hash_insert(&newHash, seeker->data);// Não usar juntamente com o debug abaixo.
+          // fprintf(stderr, "Reinserindo %s em %i\n",seeker->data, hash_insert(&newHash, seeker->data).indHash);
+        }
+        seeker = seeker->next;
       }
     }
   }
-  //fprintf(stderr, "\nEnd else");
-  // printf("\nBefore hash_free");
-  //fprintf(stderr, "\nEnd else1");
   hash_free(hash);
-  fprintf(stderr, "\nTERMINEI O REHASH\n");
   return newHash;
 }
 
 void hash_free(HashMap_t *hash){
-  fprintf(stderr, "Tentando o Free em:%p\n",hash);
+  // fprintf(stderr, "Tentando o Free em:%p\n",hash);
   if(hash == NULL) return;
   if(hash->method != Chaining){
     int reInserts = 0;
@@ -250,7 +238,7 @@ void hash_free(HashMap_t *hash){
       }
       *(((key_t **)hash->keys) + i) = NULL;
     }
-    fprintf(stderr, "%i foram removidos\n",reInserts);
+    // fprintf(stderr, "%i foram removidos\n",reInserts);
   }else{
     for(unsigned i=0 ; i<hash->size ; i++){
       list_free(*(((hashList **)hash->keys) + i));

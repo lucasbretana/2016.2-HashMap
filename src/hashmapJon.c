@@ -7,185 +7,172 @@
 #include "linkedList.h"
 
 ReturnLog_t hash_insert(HashMap_t **h, key_p hashKey){
-  h_code_t hcode;
   HashMap_t *hash = *h;
-  position_t h1_position;
   position_t h2_position;
-  ReturnLog_t operationLog;
-  h1_position = h1(hashKey, (*hash).size, &hcode);
-  operationLog.code = hcode;
-  operationLog.indH1 = h1_position;
-  int conflict = 0;
+  ReturnLog_t opLog;
+  // fprintf(stderr, "size out f:%i\n", (*hash).size);
+  opLog.indH1 = h1(hashKey, (*hash).size, &opLog.code);
+  opLog.localConflicts = 0;
   int probing = 0;
   char **aux;
+  //This block finds the position on wich insert key
   switch ((*hash).method) {
     case Chaining:
-      operationLog.indHash = h1_position;
-      switch (list_insert(*(((hashList **)(*hash).keys) + h1_position), hashKey)) {
+      opLog.indHash = opLog.indH1;
+      switch (list_insert( *( ((hashList **)(*hash).keys) + opLog.indH1), hashKey)) {
         case 0:
-          conflict = 0;
-          operationLog.success = TRUE;
+          opLog.localConflicts = 0;
+          opLog.success = TRUE;
           break;
         case 1:
-          conflict = 0;
-          operationLog.success = FALSE;
+          // fprintf(stderr, "Falied to insert :%s\n",hashKey);
+          opLog.localConflicts = 0;
+          opLog.success = FALSE;
           break;
         case 2:
-          conflict = 1;
-          operationLog.success = FALSE;
+          // fprintf(stderr, "Falied to insert :%s\n",hashKey);
+          opLog.localConflicts = 1;
+          opLog.success = FALSE;
           break;
         case 3:
-          conflict = 1;
-          operationLog.success = TRUE;
+          opLog.localConflicts = 1;
+          opLog.success = TRUE;
           break;
+        case -1: //Same as default
         default:
-          conflict = -1;
-          operationLog.success = FALSE;
+          fprintf(stderr, "Something has faild, maybe a malloc\n");
+          fprintf(stderr, "Falied to insert :%s\n",hashKey);
+          // list_free(*( ((hashList **)(*hash).keys) + opLog.indH1));
+          // list_create( ((hashList **)(*hash).keys) + opLog.indH1);
           break;
       }
       break;
-    //All the next 'cases' need to run this test
     case Linear:
-      aux = ((char **)(*hash).keys) + h1_position;
+      aux = ((char **)(*hash).keys) + opLog.indH1;
+      opLog.success = TRUE;
       if((*aux) == NULL) {
-        (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
-        strcopy(*aux, hashKey);
+        opLog.indHash = opLog.indH1;
+        insertString(aux, hashKey);
+        break; //Leaves if that was no opLog.localConflicts
+      }
 
-        operationLog.indHash = h1_position;
-        operationLog.success = TRUE;
-        break; //Leaves if that was no conflict
-      }else{
-        operationLog.success = TRUE;
-        for (probing = 0; ((*aux) != NULL); probing++) {
-          conflict += 1;
-          if (strcomp((*aux), hashKey) == 0) {
-            operationLog.success = FALSE;
-            break;
-          }
-          aux = (((char **)(*hash).keys) + ((h1_position + probing) % (*hash).size));
+      do {
+        if (strcomp((*aux), hashKey) == 0) {
+          opLog.success = FALSE;
+          break;
         }
+        probing ++;
+        opLog.localConflicts++;
+        aux = (((char **)(*hash).keys) + ((opLog.indH1 + probing) % (*hash).size));
+      } while((*aux) != NULL);
+      if (opLog.success) {
+        insertString(aux, hashKey);
       }
-
-      if (operationLog.success == TRUE) {
-        (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
-        strcopy(*aux, hashKey);
-      }
-      conflict -= 1; //Because probing started testing position 0;
-      probing  -= 1; //Because probing started testing position 0;
-      operationLog.indHash = (h1_position + probing) % (*hash).size;
+      opLog.indHash = (opLog.indH1 + probing) % (*hash).size;
       break;
     case Quadratic:
-      aux = ((char **)(*hash).keys) + h1_position;
+      aux = ((char **)(*hash).keys) + opLog.indH1;
+      opLog.success = TRUE;
       if((*aux) == NULL) {
-        (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
-        strcopy(*aux, hashKey);
-
-        operationLog.indHash = h1_position;
-        operationLog.success = TRUE;
-        break; //Leaves if that was no conflict
+        insertString(aux, hashKey);
+        opLog.indHash = opLog.indH1;
+        break; //Leaves if that was no opLog.localConflicts
       }
-
-      operationLog.success = TRUE;
-      for (probing = 1, conflict = 1; (*aux) != NULL; probing++, conflict++) {
+      do {
         if (strcomp((*aux), hashKey) == 0) {
-          operationLog.success = FALSE;
-          probing++;
-          conflict++;
+          opLog.success = FALSE;
           break;
         }
-        aux = ((char **)(*hash).keys) + ((h1_position + probing + probing * probing) % (*hash).size);
-        if (((h1_position + probing + probing * probing) % (*hash).size) == h1_position){ // If position has returned to h1, we can't write data in the hash
-          operationLog.success = FALSE;
+        probing ++;
+        opLog.localConflicts++;
+        if (((opLog.indH1 + probing + probing * probing) % (*hash).size) == opLog.indH1){ // If position has returned to h1, we can't write data in the hash
+          opLog.success = FALSE;
           probing = -1;
           break;
         }
-      }
-      if (operationLog.success == TRUE) {
-        (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
-        strcopy(*aux, hashKey);
-      }
+        aux = (((char **)(*hash).keys) + ((opLog.indH1 + probing + probing * probing) % (*hash).size));
+      } while((*aux) != NULL);
       if (probing < 0) {
-        operationLog.indHash = -1;
+        opLog.indHash = -1;
       }else{
-        conflict -= 1;
-        probing  -= 1;
-        operationLog.indHash = (h1_position + probing + probing * probing) % (*hash).size;
+        if (opLog.success) {
+          insertString(aux, hashKey);
+        }
+        opLog.indHash = (opLog.indH1 + probing + probing * probing) % (*hash).size;
       }
       break;
     case Double_Hash:
-      aux = ((char **)(*hash).keys) + h1_position;
+      aux = ((char **)(*hash).keys) + opLog.indH1;
+      opLog.success = TRUE;
       h2_position = h2(hashKey, (*hash).size);
       if((*aux) == NULL) {
-        (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
-        strcopy(*aux, hashKey);
-
-        operationLog.indHash = h1_position;
-        operationLog.success = TRUE;
-        break; //Leaves if that was no conflict
+        insertString(aux, hashKey);
+        opLog.indHash = opLog.indH1;
+        break; //Leaves if that was no opLog.localConflicts
       }
-
-      operationLog.success = TRUE;
-      for (probing = 1, conflict = 1; (*aux) != NULL; probing++, conflict++) {
-        // printf("S1:%s\nS2:%s\nProbing:%i\n",(*aux),hashKey,probing);
+      do {
         if (strcomp((*aux), hashKey) == 0) {
-          operationLog.success = FALSE;
-          probing++;
-          conflict++;
+          opLog.success = FALSE;
           break;
         }
-        aux = ((char **)(*hash).keys) + ((h1_position + (probing * h2_position)) % (*hash).size);
-        if (((h1_position + (probing * h2_position)) % (*hash).size) == h1_position){ // If position has returned to h1, we can't write data in the hash
-          operationLog.success = FALSE;
-          probing = -666;
+        probing ++;
+        opLog.localConflicts++;
+        if (((opLog.indH1 + (probing * h2_position)) % (*hash).size) == opLog.indH1){ // If position has returned to h1, we can't write data in the hash
+          opLog.success = FALSE;
+          probing = -1;
           break;
         }
-      }
-      if (operationLog.success == TRUE) {
-        (*aux) = malloc((length(hashKey) * sizeof(char )) + 1); //string size + 1 for the '\0'
-        strcopy(*aux, hashKey);
-      }
+        aux = (((char **)(*hash).keys) + ((opLog.indH1 + (probing * h2_position)) % (*hash).size));
+      } while((*aux) != NULL);
       if (probing < 0) {
-        operationLog.indHash = -1;
+        opLog.indHash = -1;
       }else{
-        conflict -= 1;
-        probing  -= 1;
-        operationLog.indHash = (h1_position + (probing * h2_position)) % (*hash).size;
+        if (opLog.success) {
+          insertString(aux, hashKey);
+        }
+        opLog.indHash = (opLog.indH1 + (probing * h2_position)) % (*hash).size;
       }
       break;
   }
-  (*hash).hashConflicts += conflict;
-  operationLog.localConflicts = conflict;
-  if(operationLog.success == TRUE) hash->nEntrys++;
-  // fprintf(stderr, "LOAD FACTOR %f\n", ((hash->nEntrys * 1.0) / ((float)hash->size)));
-  // fprintf(stderr, "Entrys %f\nhash->size %f\n\n\n", (hash->nEntrys * 1.0), ((float)hash->size));
-  if(((hash->nEntrys * 1.0) / ((float)hash->size)) > ALPHA){
-    (*h) = rehash(hash);
+  (*hash).hashConflicts += opLog.localConflicts;
+  if(opLog.success){
+    (*hash).nEntrys++;
+    if( ( ((*hash).nEntrys * 1.0) / ((float) (*hash).size) ) >= ALPHA){
+      // fprintf(stderr, "Key that caused rehash:%s\n || nEntrys:%i || h->size:%i || Calc:%f\n", hashKey, hash -> nEntrys, hash -> size, ( ((*hash).nEntrys * 1.0) / ((float) (*hash).size) ) );
+      (*h) = rehash(hash);
+    }
+  }else{
+    // fprintf(stderr, "Sting that faild:%s\nnEntrys:%i\n",hashKey, hash->nEntrys);
   }
-  return operationLog;
+  // if (hash->nEntrys > 760) {
+  //   exit(-1);
+  // }
+  return opLog;
 }
-
-// ReturnLog_t hash_get(HashMap_t *hash, key_p hashKey){
-//   ReturnLog_t a;
-//   return a;
-// }
 
 HashMap_t *hash_initialize(ConflictMethods_t method, unsigned int size){
     HashMap_t *h = malloc(sizeof(HashMap_t));
-    h->size = size;
-    h->nEntrys = 0;
-    h->method = method;
+    (*h).size = size;
+    (*h).nEntrys = 0;
+    (*h).method = method;
     if(method == Chaining){
-      h->keys = malloc(sizeof(hashList**) * size);
-      //void *p = h->keys;
+      (*h).keys = malloc(sizeof(hashList**) * size);
+      //void *p = (*h).keys;
       for (size_t i = 0; i < size; i++) {
-        *(((hashList **) h->keys) + i) = list_create();
+        *(((hashList **) (*h).keys) + i) = list_create();
       }
-      //h->keys = p;
+      //(*h).keys = p;
     }else{
-      h->keys = malloc(sizeof(char **) * size); //Vector of pointers
+      (*h).keys = malloc(sizeof(char **) * size); //Vector of pointers
       for (size_t i = 0; i < size; i++) {
-        *(((char **) h->keys) + i) = NULL;
+        *(((char **) (*h).keys) + i) = NULL;
       }
     }
     return h;
+}
+
+void insertString(char **area, char *content){
+  int size = length(content) + 1; //string size + 1 for the '\0'
+  (*area) = malloc(size * sizeof(char));
+  strcopy(*area, content);
 }
