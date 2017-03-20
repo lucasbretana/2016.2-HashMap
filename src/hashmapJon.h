@@ -1,9 +1,0 @@
-#ifndef HASHMAP_JON_H
-#define HASHMAP_JON_H
-
-#include "hashmap.h"
-
-ReturnLog_t hash_insert(HashMap_t **, key_t *);
-HashMap_t *hash_initialize(ConflictMethods_t, unsigned int);
-void insertString(char **, char *);
-#endif

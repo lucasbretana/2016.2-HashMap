@@ -22,6 +22,10 @@ hashList* list_create(){
   return head;
 }
 
+/**
+ * Deleat the doubly linked list.
+ * @param  head      List's head pointer.
+ */
 void list_free(hashList *head) {
   hashList *toFree;
   do{
@@ -38,7 +42,11 @@ void list_free(hashList *head) {
 
 /**
  * Insert 'value' at the end of a list.
- * @returns 0 if 'value' was inserted in the head.
+ * @returns   0 if 'value' was inserted in the head;
+ *            1 if 'value' was already on the head;
+ *            2 if 'value' was somewhere in the tail;
+ *            3 if 'value' was inserted in the tail;
+ *            -1 if something went wrong.
  */
 int list_insert(hashList *head, char *value){
   hashList *node;
@@ -91,7 +99,9 @@ int list_insert(hashList *head, char *value){
 
 /**
  * Look for 'info' inside the list.
- * @returns node that contains 'info' or NULL if not found.
+ * @returns  'head' if list is empty;
+ *           Node that contains info;
+ *           NULL if not found.
  */
 hashList* list_get(hashList *head, char *info){
   if ((*head).data == NULL) {
@@ -110,6 +120,12 @@ hashList* list_get(hashList *head, char *info){
 
 /**
  * Removes 'info' from list poited by head;
+ * @param  listHead    Pointer to pointer of list's head that my change if head is removed.
+ * @param  info        String to be removed.
+ * @return             -2 if List was empty;
+ *                     -1 if element was not in the list
+ *                     0 if 'info' was in the head;
+ *                     1 if 'info' was in the tail;
  */
 int list_delete(hashList **listHead, char *info){
   hashList *head = *listHead;

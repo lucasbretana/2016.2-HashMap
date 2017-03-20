@@ -52,9 +52,11 @@ position_t h1(key_p, bulk_t, h_code_t *);
 position_t h2(key_p, bulk_t);
 position_t position(key_p);
 
-ReturnLog_t hash_delete(HashMap_t *, key_t *);
-// void hash_insert(HashMap_t *, key_t *);
+void insertString(char **, char *);
+HashMap_t *hash_initialize(ConflictMethods_t, unsigned int);
+ReturnLog_t hash_insert(HashMap_t **, key_t *);
 ReturnLog_t hash_get(HashMap_t *, key_t *);
+ReturnLog_t hash_delete(HashMap_t *, key_t *);
 HashMap_t *rehash(HashMap_t *);
 void hash_free(HashMap_t *);
 #endif
