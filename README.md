@@ -2,7 +2,7 @@
 AED2 class project
 
 ### RUN
-Build: Make all
+Build: Make all  
 Usage: ./DilMae.out [OPTION] < [ENTRY_FILE]
 
 Simulate the use of a Hash Map using the speficied method for treating colisin.
