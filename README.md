@@ -19,7 +19,7 @@ Examples:
   - Insert do rehash não esta contanto os conflitos correntamente.  
     - Ex: output_500_linear_FNV, linha 375.  
     A chave deveria ser inserida na pos 366 e foi inserida na pos 370 mas 0 conflitos foram comtabilizados.
-    Na nossa implementação nós mantivemos o número apropriado de conflitos (da posição inserida pós rehash)
+    Na nossa implementação nós mantivemos o número apropriado de conflitos (da posição inserida pre rehash)
   - Ainda quanto a inserção após o rehash mas apenas no caso do encadeamento existem alguns falsos conflitos.  
     - Ex: output_500_chain_FNV, linha 397  
     Um conflito é apontato ao tentar insererir uma chave na pos 47, o que indica que a cabeça da lista já esta ocupada. Entretanto após o rehash nenhum endereço foi remapeado para lá e após o rehash ainda nenhuma chave é escrita na pos 47.  
