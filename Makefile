@@ -10,7 +10,7 @@ SRC = src
 BIN = bin
 
 # Objects
-OBJ = main hashmap usefull linkedList #hashmapJon
+OBJ = main hashmap usefull linkedList
 
 #===================================================================
 all: $(addsuffix .o, $(OBJ) )
@@ -21,9 +21,6 @@ main.o: $(SRC)/main.c usefull.o hashmap.o
 
 hashmap.o: $(SRC)/hashmap.c $(SRC)/hashmap.h usefull.o linkedList.o
 	$(CC) $(CC_FLAG) -c $(SRC)/hashmap.c -o $(BIN)/hashmap.o
-
-# hashmapJon.o: $(SRC)/hashmapJon.c $(SRC)/hashmapJon.h hashmap.o usefull.o linkedList.o
-# 	$(CC) $(CC_FLAG) -c $(SRC)/hashmapJon.c -o $(BIN)/hashmapJon.o
 
 usefull.o: $(SRC)/usefull.c $(SRC)/usefull.h
 	$(CC) $(CC_FLAG) -c $(SRC)/usefull.c -o $(BIN)/usefull.o

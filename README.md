@@ -2,7 +2,8 @@
 AED2 class project
 
 ### RUN
-Usage: ./HashMap.out [OPTION] < [ENTRY_FILE]
+Build: Make all
+Usage: ./DilMae.out [OPTION] < [ENTRY_FILE]
 
 Simulate the use of a Hash Map using the speficied method for treating colisin.
   -encadeamento		use the chaining method.
